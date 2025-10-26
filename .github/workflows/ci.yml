@@ -17,14 +17,16 @@ jobs:
           POSTGRES_DB: spendwise
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 123456
+        ports:
+          - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U postgres"
+          --health-cmd "pg_isready -U postgres -d spendwise"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 10
 
     env:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/spendwise
+      SPRING_DATASOURCE_URL: jdbc:postgresql://localhost:5432/spendwise
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: 123456
 
@@ -43,9 +45,9 @@ jobs:
         run: |
           sudo apt-get update -y
           sudo apt-get install -y postgresql-client
-          timeout 60 bash -c 'until pg_isready -h postgres -p 5432 -U postgres; do
+          timeout 120 bash -c 'until pg_isready -h localhost -p 5432 -U postgres -d spendwise; do
             echo "Waiting for Postgres..."
-            sleep 3
+            sleep 4
           done'
 
       - name: Build with Maven
