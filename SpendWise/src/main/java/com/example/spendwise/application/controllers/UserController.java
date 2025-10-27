@@ -1,6 +1,7 @@
 package com.example.spendwise.application.controllers;
 
 import com.example.spendwise.application.dtos.user.CreateUserDto;
+import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
 import com.example.spendwise.application.services.UserServices;
 import jakarta.validation.Valid;
@@ -28,9 +29,16 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/password")
-        public ResponseEntity<User> updateUserPassword(@PathVariable UUID userId, @Valid @RequestBody UpdateUserPasswordDto dto)
-        {
-            User updatedUser = userServices.updatePassword(userId, dto);
-            return ResponseEntity.ok(updatedUser);
-        }
+    public ResponseEntity<User> updateUserPassword(@PathVariable UUID userId, @Valid @RequestBody UpdateUserPasswordDto dto)
+    {
+        User updatedUser = userServices.updatePassword(userId, dto);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PatchMapping("/{userId}/names")
+    public ResponseEntity<User> updateUserNames(@PathVariable UUID userId, @Valid @RequestBody UpdateUserNamesDto dto)
+    {
+        User updatedUser = userServices.updateUserNames(userId, dto);
+        return ResponseEntity.ok(updatedUser);
+    }
 }

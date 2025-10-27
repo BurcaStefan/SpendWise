@@ -1,6 +1,7 @@
 package com.example.spendwise.application.services;
 
 import com.example.spendwise.application.dtos.user.CreateUserDto;
+import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
 import com.example.spendwise.application.factory.EntityFactory;
 import com.example.spendwise.domain.entities.User;
@@ -44,5 +45,14 @@ public class UserServices {
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         return userRepository.updatePassword(userId, user.getPassword());
+    }
+
+    public User updateUserNames(UUID userId, UpdateUserNamesDto dto) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        user.setFirstname(dto.getFirstname());
+        user.setLastname(dto.getLastname());
+        return userRepository.updateUserNames(userId, dto);
     }
 }
