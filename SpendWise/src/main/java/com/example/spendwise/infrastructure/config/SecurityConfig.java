@@ -1,4 +1,3 @@
-// java
 package com.example.spendwise.infrastructure.config;
 
 import org.slf4j.Logger;
@@ -29,6 +28,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
+                        .requestMatchers(HttpMethod.PATCH, "/api/users/*/password").permitAll()
                         .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
