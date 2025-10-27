@@ -12,4 +12,5 @@ public interface IUserRepository {
     User createUser(User user);
     User updatePassword(UUID id, String newPassword);
     User updateUserNames(UUID id, UpdateUserNamesDto dto);
+    boolean deleteUser(UUID id);
 }

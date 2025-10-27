@@ -55,4 +55,13 @@ public class UserRepositoryImpl implements IUserRepository {
         user.setLastname(dto.getLastname());
         return userRepository.save(user);
     }
+
+    @Override
+    public boolean deleteUser(UUID id) {
+        if (!userRepository.existsById(id)) {
+            return false;
+        }
+        userRepository.deleteById(id);
+        return true;
+    }
 }

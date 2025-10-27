@@ -55,4 +55,11 @@ public class UserServices {
         user.setLastname(dto.getLastname());
         return userRepository.updateUserNames(userId, dto);
     }
+
+    public boolean deleteUser(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        return userRepository.deleteUser(userId);
+    }
 }
