@@ -30,6 +30,11 @@ public class UserServices {
         this.userFactory = userFactory;
     }
 
+    public User getUserById(UUID userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
     public User createUser(CreateUserDto createUserDto) {
         if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already used");

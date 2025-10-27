@@ -28,6 +28,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }
 
+    @GetMapping("/{userId}")
+    public ResponseEntity<User> getUserById(@PathVariable UUID userId)
+    {
+        User user = userServices.getUserById(userId);
+        return ResponseEntity.ok(user);
+    }
+
     @PatchMapping("/{userId}/password")
     public ResponseEntity<User> updateUserPassword(@PathVariable UUID userId, @Valid @RequestBody UpdateUserPasswordDto dto)
     {

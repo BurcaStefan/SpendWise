@@ -28,6 +28,11 @@ public class UserRepositoryImpl implements IUserRepository {
     }
 
     @Override
+    public User getUserById(UUID id) {
+        return userRepository.findById(id).orElse(null);
+    }
+
+    @Override
     public User createUser(User user) {
         return userRepository.save(user);
     }

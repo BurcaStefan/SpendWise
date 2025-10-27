@@ -1,5 +1,6 @@
 package com.example.spendwise.domain.repositories;
 
+import com.example.spendwise.application.dtos.user.GetUserDto;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.domain.entities.User;
 
@@ -13,4 +14,5 @@ public interface IUserRepository {
     User updatePassword(UUID id, String newPassword);
     User updateUserNames(UUID id, UpdateUserNamesDto dto);
     boolean deleteUser(UUID id);
+    User getUserById(UUID id);
 }
