@@ -1,4 +1,4 @@
-package com.example.spendwise.domain.repository;
+package com.example.spendwise.domain.repositories;
 
 import com.example.spendwise.domain.entities.User;
 
@@ -7,7 +7,7 @@ import java.util.UUID;
 
 public interface IUserRepository {
     Optional<User> findById(UUID id);
-    Optional<User> findByEmail(String email);
-    User createUser(User user);
     boolean existsByEmail(String email);
+    User createUser(User user);
+    User updatePassword(UUID id, String newPassword);
 }

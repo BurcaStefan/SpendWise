@@ -1,9 +1,10 @@
 package com.example.spendwise.application.services;
 
 import com.example.spendwise.application.dtos.user.CreateUserDto;
+import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
 import com.example.spendwise.application.factory.EntityFactory;
 import com.example.spendwise.domain.entities.User;
-import com.example.spendwise.domain.repository.IUserRepository;
+import com.example.spendwise.domain.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,13 @@ public class UserServices {
 
     private final IUserRepository userRepository;
     private final EntityFactory<User, CreateUserDto> userFactory;
+    private final PasswordEncoder passwordEncoder;
+
 
     public UserServices(IUserRepository userRepository,
-                        @Qualifier("userFactory") EntityFactory<User, CreateUserDto> userFactory) {
+                        @Qualifier("userFactory") EntityFactory<User, CreateUserDto> userFactory,
+                        PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.userFactory = userFactory;
     }
@@ -31,5 +36,13 @@ public class UserServices {
 
         User newUser = userFactory.create(createUserDto);
         return userRepository.createUser(newUser);
+    }
+
+    public User updatePassword(UUID userId, UpdateUserPasswordDto dto){
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
+        return userRepository.updatePassword(userId, user.getPassword());
     }
 }
