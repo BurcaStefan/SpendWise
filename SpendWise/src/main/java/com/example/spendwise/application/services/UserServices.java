@@ -1,6 +1,7 @@
 package com.example.spendwise.application.services;
 
 import com.example.spendwise.application.dtos.user.CreateUserDto;
+import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
 import com.example.spendwise.application.factory.EntityFactory;
 import com.example.spendwise.domain.entities.User;
@@ -29,6 +30,11 @@ public class UserServices {
         this.userFactory = userFactory;
     }
 
+    public User getUserById(UUID userId) {
+        return userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+    }
+
     public User createUser(CreateUserDto createUserDto) {
         if (userRepository.existsByEmail(createUserDto.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "This email is already used");
@@ -44,5 +50,21 @@ public class UserServices {
 
         user.setPassword(passwordEncoder.encode(dto.getNewPassword()));
         return userRepository.updatePassword(userId, user.getPassword());
+    }
+
+    public User updateUserNames(UUID userId, UpdateUserNamesDto dto) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        user.setFirstname(dto.getFirstname());
+        user.setLastname(dto.getLastname());
+        return userRepository.updateUserNames(userId, dto);
+    }
+
+    public boolean deleteUser(UUID userId) {
+        User user = userRepository.findById(userId).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        return userRepository.deleteUser(userId);
     }
 }
