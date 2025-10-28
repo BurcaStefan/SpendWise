@@ -23,6 +23,9 @@ public class User {
     @Column(name = "password", nullable = false)
     private String passwordHash;
 
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private BudgetAccount budgetAccount;
+
     public User(){}
 
     public User(UUID userId, String firstname, String lastname, String email, String passwordHash) {
@@ -47,4 +50,7 @@ public class User {
 
     public String getPassword() { return passwordHash; }
     public void setPassword(String passwordHash) { this.passwordHash = passwordHash; }
+
+    public BudgetAccount getBudgetAccount() { return budgetAccount; }
+    public void setBudgetAccount(BudgetAccount budgetAccount) { this.budgetAccount = budgetAccount; }
 }
