@@ -1,6 +1,5 @@
 package com.example.spendwise.domain.repositories;
 
-import com.example.spendwise.application.dtos.user.GetUserDto;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.domain.entities.User;
 
