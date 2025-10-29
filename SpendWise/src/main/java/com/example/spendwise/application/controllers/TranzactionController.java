@@ -1,6 +1,7 @@
 package com.example.spendwise.application.controllers;
 
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
+import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.entities.Tranzaction;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,12 @@ public class TranzactionController {
     public ResponseEntity<Tranzaction> getById(@PathVariable UUID tranzactionId) {
         Tranzaction tranzaction = tranzactionServices.getTranzactionById(tranzactionId);
         return ResponseEntity.ok(tranzaction);
+    }
+
+    @PutMapping("/{tranzactionId}")
+    public ResponseEntity<Tranzaction> update(@PathVariable UUID tranzactionId, @Valid @RequestBody UpdateTranzactionDto updateTranzactionDto) {
+        Tranzaction updatedTranzaction = tranzactionServices.updateTranzaction(tranzactionId, updateTranzactionDto);
+        return ResponseEntity.ok(updatedTranzaction);
     }
 
 }

@@ -26,18 +26,20 @@ public class TranzactionServices {
         return tranzactionRepository.createTranzaction(tranzaction);
     }
 
-//    public Tranzaction updateTranzaction(UUID tranzactionId, UpdateTranzactionDto dto) {
-//        Tranzaction tranzacaton = tranzactionRepository.findById(tranzactionId).orElseThrow(() ->
-//                new ResponseStatusException(HttpStatus.NOT_FOUND, "Tranzaction not found"));
-//
-//        tranzacaton.setType(dto.getTranzactionType());
-//        tranzacaton.setCategory(dto.getCategoryType());
-//        tranzacaton.setValue(dto.getValue());
-//        tranzacaton.setDate(dto.getDate());
-//        tranzacaton.setRecurrent(dto.isRecurrent());
-//        tranzacaton.setDescription(dto.getDescription());
-//        return tranzactionRepository.updateTranzaction(tranzactionId, dto);
-//    }
+    public Tranzaction updateTranzaction(UUID tranzactionId, UpdateTranzactionDto dto) {
+        Tranzaction tranzacaton = tranzactionRepository.getTranzactionById(tranzactionId);
+        if (tranzacaton == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tranzaction not found");
+        }
+
+        tranzacaton.setType(dto.getTranzactionType());
+        tranzacaton.setCategory(dto.getCategoryType());
+        tranzacaton.setValue(dto.getValue());
+        tranzacaton.setDate(dto.getDate());
+        tranzacaton.setRecurrent(dto.isRecurrent());
+        tranzacaton.setDescription(dto.getDescription());
+        return tranzactionRepository.updateTranzaction(tranzactionId, dto);
+    }
 
     public Tranzaction getTranzactionById(UUID tranzactionId) {
         Tranzaction tranzaction = tranzactionRepository.getTranzactionById(tranzactionId);
