@@ -1,19 +1,80 @@
 package com.example.spendwise.application.dtos.tranzaction;
 import com.example.spendwise.domain.entities.TranzactionType;
 import com.example.spendwise.domain.entities.CategoryType;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+
 import java.util.UUID;
 
 public class CreateTranzactionDto {
-    @NotBlank
+    @NotNull
     public UUID accountId;
-    @NotBlank
+    @NotNull
     public TranzactionType tranzactionType;
-    @NotBlank
+    @NotNull
     public CategoryType categoryType;
-    @NotBlank
+    @NotNull
+    @Positive
     public double value;
-    @NotBlank
+    @NotNull
     public boolean recurrent;
     public String description;
+
+    public CreateTranzactionDto(UUID accountId, TranzactionType tranzactionType, CategoryType categoryType,
+                               double value, boolean recurrent, String description) {
+        this.accountId = accountId;
+        this.tranzactionType = tranzactionType;
+        this.categoryType = categoryType;
+        this.value = value;
+        this.recurrent = recurrent;
+        this.description = description;
+    }
+
+    public TranzactionType getTranzactionType() {
+        return tranzactionType;
+    }
+
+    public void setTranzactionType(TranzactionType tranzactionType) {
+        this.tranzactionType = tranzactionType;
+    }
+
+    public UUID getAccountId() {
+        return accountId;
+    }
+
+    public void setAccountId(UUID accountId) {
+        this.accountId = accountId;
+    }
+
+    public double getValue() {
+        return value;
+    }
+
+    public void setValue(double value) {
+        this.value = value;
+    }
+
+    public CategoryType getCategoryType() {
+        return categoryType;
+    }
+
+    public void setCategoryType(CategoryType categoryType) {
+        this.categoryType = categoryType;
+    }
+
+    public boolean isRecurrent() {
+        return recurrent;
+    }
+
+    public void setRecurrent(boolean recurrent) {
+        this.recurrent = recurrent;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

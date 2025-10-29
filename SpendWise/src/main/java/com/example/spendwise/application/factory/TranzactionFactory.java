@@ -11,12 +11,12 @@ public class TranzactionFactory implements EntityFactory<Tranzaction, CreateTran
     public Tranzaction create(CreateTranzactionDto dto) {
         Tranzaction tranzaction = new Tranzaction();
         tranzaction.setTranzactionId(UUID.randomUUID());
-        tranzaction.setAccountId(dto.accountId);
-        tranzaction.setType(dto.tranzactionType);
-        tranzaction.setCategory(dto.categoryType);
-        tranzaction.setValue(dto.value);
-        tranzaction.setRecurrent(dto.recurrent);
-        tranzaction.setDescription(dto.description);
+        tranzaction.setAccountId(dto.getAccountId());
+        tranzaction.setType(dto.getTranzactionType());
+        tranzaction.setCategory(dto.getCategoryType());
+        tranzaction.setValue(dto.getValue());
+        tranzaction.setRecurrent(dto.isRecurrent());
+        tranzaction.setDescription(dto.getDescription());
         return tranzaction;
     }
 
