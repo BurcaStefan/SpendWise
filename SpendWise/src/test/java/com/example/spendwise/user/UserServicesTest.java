@@ -9,8 +9,10 @@ import com.example.spendwise.domain.entities.User;
 import com.example.spendwise.domain.repositories.IUserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,7 +22,8 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class UserServicesTest {
+@ExtendWith(MockitoExtension.class)
+class UserServicesTest {
     @Mock
     private IUserRepository userRepository;
     @Mock
@@ -34,7 +37,6 @@ public class UserServicesTest {
 
     @BeforeEach
     void setUp() {
-        MockitoAnnotations.openMocks(this);
         userServices = new UserServices(userRepository, userFactory, passwordEncoder);
         testUserId = UUID.randomUUID();
         testUser = new User(testUserId, "Ion", "Popescu", "popescu@gmail.com", "parola1234");
