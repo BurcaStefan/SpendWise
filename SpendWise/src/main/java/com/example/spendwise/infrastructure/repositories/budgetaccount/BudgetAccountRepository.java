@@ -1,6 +1,7 @@
 package com.example.spendwise.infrastructure.repositories.budgetaccount;
 
 import com.example.spendwise.application.dtos.budgetaccount.GetBudgetAccountByIdDto;
+import com.example.spendwise.application.dtos.budgetaccount.UpdateBalanceBudgetAccountDto;
 import com.example.spendwise.domain.entities.BudgetAccount;
 import com.example.spendwise.domain.repositories.IBudgetAccountRepository;
 import org.springframework.stereotype.Repository;
@@ -31,5 +32,15 @@ public class BudgetAccountRepository implements IBudgetAccountRepository {
         dto.setUserId(budgetAccount.getUserId());
         dto.setValue(budgetAccount.getValue());
         return dto;
+    }
+
+    @Override
+    public BudgetAccount updateBudgetAccount(UUID id, UpdateBalanceBudgetAccountDto dto) {
+        BudgetAccount budgetAccount = budgetAccountRepository.findById(id).orElse(null);
+        if (budgetAccount == null) {
+            return null;
+        }
+        budgetAccount.setValue(dto.getValue());
+        return budgetAccountRepository.save(budgetAccount);
     }
 }

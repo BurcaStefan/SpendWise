@@ -2,10 +2,12 @@ package com.example.spendwise.application.services;
 
 import com.example.spendwise.application.dtos.budgetaccount.CreateBudgetAccountDto;
 import com.example.spendwise.application.dtos.budgetaccount.GetBudgetAccountByIdDto;
+import com.example.spendwise.application.dtos.budgetaccount.UpdateBalanceBudgetAccountDto;
 import com.example.spendwise.application.factory.EntityFactory;
 import com.example.spendwise.domain.entities.BudgetAccount;
 import com.example.spendwise.domain.repositories.IBudgetAccountRepository;
 import com.example.spendwise.domain.repositories.IUserRepository;
+import com.example.spendwise.infrastructure.repositories.budgetaccount.BudgetAccountRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,5 +43,13 @@ public class BudgetAccountServices {
         }
 
         return budgetAccountRepository.getBudgetAccountById(budgetAccountId);
+    }
+
+    public BudgetAccount updateBudgetAccount(UUID budgetAccountId, UpdateBalanceBudgetAccountDto dto) {
+        if(budgetAccountRepository.getBudgetAccountById(budgetAccountId)==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Budget Account not found");
+        }
+
+        return budgetAccountRepository.updateBudgetAccount(budgetAccountId, dto);
     }
 }

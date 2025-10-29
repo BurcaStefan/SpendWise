@@ -2,6 +2,7 @@ package com.example.spendwise.application.controllers;
 
 import com.example.spendwise.application.dtos.budgetaccount.CreateBudgetAccountDto;
 import com.example.spendwise.application.dtos.budgetaccount.GetBudgetAccountByIdDto;
+import com.example.spendwise.application.dtos.budgetaccount.UpdateBalanceBudgetAccountDto;
 import com.example.spendwise.application.services.BudgetAccountServices;
 import com.example.spendwise.domain.entities.BudgetAccount;
 import jakarta.validation.Valid;
@@ -29,5 +30,12 @@ public class BudgetAccountController {
     public ResponseEntity<GetBudgetAccountByIdDto> getBudgetAccountById(@PathVariable UUID accountId) {
         GetBudgetAccountByIdDto budgetAccount = budgetAccountServices.getBudgetAccountById(accountId);
         return ResponseEntity.ok(budgetAccount);
+    }
+
+    @PutMapping("/{accountId}")
+    public ResponseEntity<BudgetAccount> updateBudgetAccount(@PathVariable UUID accountId,
+                                                             @Valid @RequestBody UpdateBalanceBudgetAccountDto dto) {
+        BudgetAccount updatedBudgetAccount = budgetAccountServices.updateBudgetAccount(accountId, dto);
+        return ResponseEntity.ok(updatedBudgetAccount);
     }
 }

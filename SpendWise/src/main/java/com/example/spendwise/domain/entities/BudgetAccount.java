@@ -1,5 +1,6 @@
 package com.example.spendwise.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,7 @@ public class BudgetAccount {
     private UUID userId;
 
     @OneToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
@@ -23,6 +25,7 @@ public class BudgetAccount {
     private double value = 0.0;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<Tranzaction> tranzactions = new ArrayList<>();
 
     public BudgetAccount() {}

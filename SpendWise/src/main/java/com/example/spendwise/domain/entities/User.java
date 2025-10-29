@@ -1,5 +1,6 @@
 package com.example.spendwise.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class User {
     private String passwordHash;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private BudgetAccount budgetAccount;
 
     public User(){}
