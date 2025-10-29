@@ -19,18 +19,18 @@ public class BudgetAccount {
     @JoinColumn(name = "user_id", insertable = false, updatable = false)
     private User user;
 
-    @Column(name = "sold", nullable = false)
-    private double sold = 0.0;
+    @Column(name = "value", nullable = false)
+    private double value = 0.0;
 
     @OneToMany(mappedBy = "account", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Tranzaction> tranzactions = new ArrayList<>();
 
     public BudgetAccount() {}
 
-    public BudgetAccount(UUID budgetAccountId, UUID userId, double sold) {
+    public BudgetAccount(UUID budgetAccountId, UUID userId, double value) {
         this.budgetAccountId = budgetAccountId;
         this.userId = userId;
-        this.sold = sold;
+        this.value = value;
     }
 
     public UUID getBudgetAccountId() { return budgetAccountId; }
@@ -42,8 +42,8 @@ public class BudgetAccount {
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; /* if needed, also set userId = user.getUserId(); */ }
 
-    public double getSold() { return sold; }
-    public void setSold(double sold) { this.sold = sold; }
+    public double getValue() { return value; }
+    public void setValue(double value) { this.value = value; }
 
     public List<Tranzaction> getTranzactions() { return tranzactions; }
     public void setTranzactions(List<Tranzaction> tranzactions) { this.tranzactions = tranzactions; }

@@ -1,11 +1,16 @@
 package com.example.spendwise.application.services;
 
 import com.example.spendwise.application.dtos.budgetaccount.CreateBudgetAccountDto;
+import com.example.spendwise.application.dtos.budgetaccount.GetBudgetAccountByIdDto;
 import com.example.spendwise.application.factory.EntityFactory;
 import com.example.spendwise.domain.entities.BudgetAccount;
 import com.example.spendwise.domain.repositories.IBudgetAccountRepository;
 import com.example.spendwise.domain.repositories.IUserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+import java.util.UUID;
+
 
 @Service
 public class BudgetAccountServices {
@@ -23,10 +28,18 @@ public class BudgetAccountServices {
 
     public BudgetAccount createBudgetAccount(CreateBudgetAccountDto dto) {
         if(userRepository.getUserById(dto.getUserId())==null){
-            throw new IllegalArgumentException("User with the given ID does not exist.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
         }
 
         BudgetAccount budgetAccount = budgetAccountFactory.create(dto);
         return budgetAccountRepository.createBudgetAccount(budgetAccount);
+    }
+
+    public GetBudgetAccountByIdDto getBudgetAccountById(UUID budgetAccountId) {
+        if(budgetAccountRepository.getBudgetAccountById(budgetAccountId)==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Budget Account not found");
+        }
+
+        return budgetAccountRepository.getBudgetAccountById(budgetAccountId);
     }
 }
