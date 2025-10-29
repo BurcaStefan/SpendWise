@@ -1,5 +1,6 @@
 package com.example.spendwise.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.UUID;
@@ -16,6 +17,7 @@ public class Tranzaction {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", insertable = false, updatable = false)
+    @JsonIgnore
     private BudgetAccount account;
 
     @Enumerated(EnumType.STRING)
