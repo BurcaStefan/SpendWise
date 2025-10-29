@@ -30,12 +30,7 @@ class UserRepositoryImplTest {
     void setUp() {
         userRepository = new UserRepositoryImpl(springDataUserRepository);
         testUserId = UUID.randomUUID();
-        testUser = new User();
-        testUser.setId(testUserId);
-        testUser.setFirstname("Ion");
-        testUser.setLastname("Popescu");
-        testUser.setEmail("popescu@gmail.com");
-        testUser.setPassword("parola1234");
+        testUser = new User(testUserId, "Ion", "Popescu", "popescu@gmail.com", "parola1234");
     }
 
     @Test
