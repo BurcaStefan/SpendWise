@@ -1,9 +1,14 @@
 package com.example.spendwise.domain.entities;
 
 public enum CategoryType {
-    ALIMENTE,
+    HRANA,
     HAINE,
     TRANSPORT,
     UTILITATI,
-    DIVERTISMENT
+    DIVERTISMENT,
+    SANATATE,
+    EDUCATIE,
+    CALATORII,
+    CADOURI,
+    ALTELE
 }

@@ -1,6 +1,6 @@
 package com.example.spendwise.domain.entities;
 
-public enum TransactionType {
+public enum TranzactionType {
     VENIT,
     CHELTUIALA
 }

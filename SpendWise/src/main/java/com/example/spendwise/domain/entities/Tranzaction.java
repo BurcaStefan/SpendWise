@@ -7,18 +7,20 @@ import java.util.UUID;
 @Entity
 @Table(name = "tranzaction")
 public class Tranzaction {
-
     @Id
     @Column(name = "tranzaction_id", nullable = false)
     private UUID tranzactionId;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
+    @Column(name = "account_id", nullable = false)
+    private UUID accountId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "account_id", insertable = false, updatable = false)
     private BudgetAccount account;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "type", nullable = false)
-    private TransactionType type;
+    private TranzactionType type;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "category", nullable = false)
@@ -28,7 +30,7 @@ public class Tranzaction {
     private double value;
 
     @Column(name = "date", nullable = false)
-    private LocalDate date;
+    private LocalDate date = LocalDate.now();
 
     @Column(name = "recurrent", nullable = false)
     private boolean recurrent = false;
@@ -38,10 +40,10 @@ public class Tranzaction {
 
     public Tranzaction() {}
 
-    public Tranzaction(UUID tranzactionId, BudgetAccount account, TransactionType type, CategoryType category,
+    public Tranzaction(UUID tranzactionId, UUID accountId, TranzactionType type, CategoryType category,
                        double value, LocalDate date, boolean recurrent, String description) {
         this.tranzactionId = tranzactionId;
-        this.account = account;
+        this.accountId = accountId;
         this.type = type;
         this.category = category;
         this.value = value;
@@ -53,11 +55,14 @@ public class Tranzaction {
     public UUID getTranzactionId() { return tranzactionId; }
     public void setTranzactionId(UUID tranzactionId) { this.tranzactionId = tranzactionId; }
 
-    public BudgetAccount getAccount() { return account; }
-    public void setAccount(BudgetAccount account) { this.account = account; }
+    public UUID getAccountId() { return accountId; }
+    public void setAccountId(UUID accountId) { this.accountId = accountId; }
 
-    public TransactionType getType() { return type; }
-    public void setType(TransactionType type) { this.type = type; }
+    public BudgetAccount getAccount() { return account; }
+    public void setAccount(BudgetAccount account) { this.account = account; /* if needed, also set accountId manually */ }
+
+    public TranzactionType getType() { return type; }
+    public void setType(TranzactionType type) { this.type = type; }
 
     public CategoryType getCategory() { return category; }
     public void setCategory(CategoryType category) { this.category = category; }
