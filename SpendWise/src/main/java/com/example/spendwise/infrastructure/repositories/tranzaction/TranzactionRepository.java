@@ -42,4 +42,13 @@ public class TranzactionRepository implements ITranzactionRepository {
     public Tranzaction getTranzactionById(UUID tranzactionId) {
         return tranzactionRepository.findById(tranzactionId).orElse(null);
     }
+
+    @Override
+    public boolean deleteTranzaction(UUID tranzactionId) {
+        if(!tranzactionRepository.existsById(tranzactionId)) {
+            return false;
+        }
+        tranzactionRepository.deleteById(tranzactionId);
+        return true;
+    }
 }

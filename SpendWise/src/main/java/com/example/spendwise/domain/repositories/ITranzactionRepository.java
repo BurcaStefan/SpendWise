@@ -9,4 +9,5 @@ public interface ITranzactionRepository {
     Tranzaction createTranzaction(Tranzaction tranzaction);
     Tranzaction updateTranzaction(UUID tranzactionId, UpdateTranzactionDto tranzactionDto);
     Tranzaction getTranzactionById(UUID tranzactionId);
+    boolean deleteTranzaction(UUID tranzactionId);
 }

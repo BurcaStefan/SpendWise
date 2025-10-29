@@ -19,21 +19,31 @@ public class TranzactionController {
     }
 
     @PostMapping
-    public ResponseEntity<Tranzaction> create(@Valid @RequestBody CreateTranzactionDto createTranzactionDto) {
+    public ResponseEntity<Tranzaction> createTranzaction(@Valid @RequestBody CreateTranzactionDto createTranzactionDto) {
         Tranzaction tranzaction = tranzactionServices.createtranzaction(createTranzactionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(tranzaction);
     }
 
     @GetMapping("/{tranzactionId}")
-    public ResponseEntity<Tranzaction> getById(@PathVariable UUID tranzactionId) {
+    public ResponseEntity<Tranzaction> getTranzactionById(@PathVariable UUID tranzactionId) {
         Tranzaction tranzaction = tranzactionServices.getTranzactionById(tranzactionId);
         return ResponseEntity.ok(tranzaction);
     }
 
     @PutMapping("/{tranzactionId}")
-    public ResponseEntity<Tranzaction> update(@PathVariable UUID tranzactionId, @Valid @RequestBody UpdateTranzactionDto updateTranzactionDto) {
+    public ResponseEntity<Tranzaction> updateTranzaction(@PathVariable UUID tranzactionId, @Valid @RequestBody UpdateTranzactionDto updateTranzactionDto) {
         Tranzaction updatedTranzaction = tranzactionServices.updateTranzaction(tranzactionId, updateTranzactionDto);
         return ResponseEntity.ok(updatedTranzaction);
+    }
+
+    @DeleteMapping("/{tranzactionId}")
+    public ResponseEntity<Void> deleteTranzaction(@PathVariable UUID tranzactionId) {
+        boolean deleted = tranzactionServices.deleteTranzaction(tranzactionId);
+        if (deleted) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
 }

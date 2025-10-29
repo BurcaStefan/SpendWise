@@ -48,4 +48,11 @@ public class TranzactionServices {
         }
         return tranzaction;
     }
+
+    public boolean deleteTranzaction(UUID tranzactionId) {
+        if (tranzactionRepository.getTranzactionById(tranzactionId) == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tranzaction not found");
+        }
+        return tranzactionRepository.deleteTranzaction(tranzactionId);
+    }
 }
