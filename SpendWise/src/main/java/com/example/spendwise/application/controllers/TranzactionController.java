@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.spendwise.application.services.TranzactionServices;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/tranzactions")
@@ -20,6 +21,12 @@ public class TranzactionController {
     public ResponseEntity<Tranzaction> create(@Valid @RequestBody CreateTranzactionDto createTranzactionDto) {
         Tranzaction tranzaction = tranzactionServices.createtranzaction(createTranzactionDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(tranzaction);
+    }
+
+    @GetMapping("/{tranzactionId}")
+    public ResponseEntity<Tranzaction> getById(@PathVariable UUID tranzactionId) {
+        Tranzaction tranzaction = tranzactionServices.getTranzactionById(tranzactionId);
+        return ResponseEntity.ok(tranzaction);
     }
 
 }

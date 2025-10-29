@@ -38,4 +38,12 @@ public class TranzactionServices {
 //        tranzacaton.setDescription(dto.getDescription());
 //        return tranzactionRepository.updateTranzaction(tranzactionId, dto);
 //    }
+
+    public Tranzaction getTranzactionById(UUID tranzactionId) {
+        Tranzaction tranzaction = tranzactionRepository.getTranzactionById(tranzactionId);
+        if (tranzaction == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tranzaction not found");
+        }
+        return tranzaction;
+    }
 }

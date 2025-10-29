@@ -37,4 +37,9 @@ public class TranzactionRepository implements ITranzactionRepository {
 
         return tranzactionRepository.save(tranzaction);
     }
+
+    @Override
+    public Tranzaction getTranzactionById(UUID tranzactionId) {
+        return tranzactionRepository.findById(tranzactionId).orElse(null);
+    }
 }
