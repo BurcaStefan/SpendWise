@@ -43,4 +43,13 @@ public class BudgetAccountRepository implements IBudgetAccountRepository {
         budgetAccount.setValue(dto.getValue());
         return budgetAccountRepository.save(budgetAccount);
     }
+
+    @Override
+    public boolean deleteBudgetAccount(UUID id) {
+        if (!budgetAccountRepository.existsById(id)) {
+            return false;
+        }
+        budgetAccountRepository.deleteById(id);
+        return true;
+    }
 }

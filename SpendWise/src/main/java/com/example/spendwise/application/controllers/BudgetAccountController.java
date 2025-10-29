@@ -38,4 +38,14 @@ public class BudgetAccountController {
         BudgetAccount updatedBudgetAccount = budgetAccountServices.updateBudgetAccount(accountId, dto);
         return ResponseEntity.ok(updatedBudgetAccount);
     }
+
+    @DeleteMapping("/{accountId}")
+    public ResponseEntity<Boolean> deleteBudgetAccount(@PathVariable UUID accountId) {
+        boolean deleted = budgetAccountServices.deleteBudgetAccount(accountId);
+        if (deleted) {
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(true);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
+        }
+    }
 }

@@ -9,4 +9,5 @@ public interface IBudgetAccountRepository {
     BudgetAccount createBudgetAccount(BudgetAccount budgetAccount);
     GetBudgetAccountByIdDto getBudgetAccountById(UUID id);
     BudgetAccount updateBudgetAccount(UUID id, UpdateBalanceBudgetAccountDto dto);
+    boolean deleteBudgetAccount(UUID id);
 }

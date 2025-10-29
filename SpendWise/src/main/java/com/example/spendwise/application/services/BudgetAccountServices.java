@@ -52,4 +52,12 @@ public class BudgetAccountServices {
 
         return budgetAccountRepository.updateBudgetAccount(budgetAccountId, dto);
     }
+
+    public boolean deleteBudgetAccount(UUID budgetAccountId) {
+        if(budgetAccountRepository.getBudgetAccountById(budgetAccountId)==null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Budget Account not found");
+        }
+
+        return budgetAccountRepository.deleteBudgetAccount(budgetAccountId);
+    }
 }
