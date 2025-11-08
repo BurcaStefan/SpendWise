@@ -10,6 +10,8 @@ public class UpdateBalanceBudgetAccountDto {
         this.value = value;
     }
 
+    public UpdateBalanceBudgetAccountDto() {}
+
     public double getValue() {
         return value;
     }
