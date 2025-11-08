@@ -1,4 +1,4 @@
-package com.example.spendwise.application.controllers;
+package com.example.spendwise.controllers;
 
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;

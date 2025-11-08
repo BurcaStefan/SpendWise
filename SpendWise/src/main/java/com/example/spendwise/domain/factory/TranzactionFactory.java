@@ -1,4 +1,4 @@
-package com.example.spendwise.application.factory;
+package com.example.spendwise.domain.factory;
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
 import com.example.spendwise.domain.entities.Tranzaction;
 import org.springframework.stereotype.Component;

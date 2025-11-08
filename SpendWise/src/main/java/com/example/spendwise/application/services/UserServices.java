@@ -3,7 +3,7 @@ package com.example.spendwise.application.services;
 import com.example.spendwise.application.dtos.user.CreateUserDto;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
-import com.example.spendwise.application.factory.EntityFactory;
+import com.example.spendwise.domain.factory.EntityFactory;
 import com.example.spendwise.domain.entities.User;
 import com.example.spendwise.domain.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -66,5 +66,13 @@ public class UserServices {
                 new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
         return userRepository.deleteUser(userId);
+    }
+
+    public String login(String email, String rawPassword) {
+        String token = userRepository.loginUser(email, rawPassword);
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid credentials");
+        }
+        return token;
     }
 }

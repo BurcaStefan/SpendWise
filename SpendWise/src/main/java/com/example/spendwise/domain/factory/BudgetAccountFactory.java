@@ -1,4 +1,4 @@
-package com.example.spendwise.application.factory;
+package com.example.spendwise.domain.factory;
 
 import com.example.spendwise.application.dtos.budgetaccount.CreateBudgetAccountDto;
 import com.example.spendwise.domain.entities.BudgetAccount;

@@ -14,4 +14,5 @@ public interface IUserRepository {
     User updateUserNames(UUID id, UpdateUserNamesDto dto);
     boolean deleteUser(UUID id);
     User getUserById(UUID id);
+    String loginUser(String email, String password);
 }

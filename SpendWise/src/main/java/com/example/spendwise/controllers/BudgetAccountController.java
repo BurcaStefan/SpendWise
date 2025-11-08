@@ -1,4 +1,4 @@
-package com.example.spendwise.application.controllers;
+package com.example.spendwise.controllers;
 
 import com.example.spendwise.application.dtos.budgetaccount.CreateBudgetAccountDto;
 import com.example.spendwise.application.dtos.budgetaccount.GetBudgetAccountByIdDto;
