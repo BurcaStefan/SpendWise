@@ -1,6 +1,7 @@
 package com.example.spendwise.controllers;
 
 import com.example.spendwise.application.dtos.user.CreateUserDto;
+import com.example.spendwise.application.dtos.user.LoginUserDto;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
 import com.example.spendwise.application.services.UserServices;
@@ -10,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import com.example.spendwise.domain.entities.User;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -26,6 +28,12 @@ public class UserController {
     {
         User createdUser = userServices.createUser(createUserDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody LoginUserDto loginDto) {
+        String token = userServices.login(loginDto.getEmail(), loginDto.getPassword());
+        return ResponseEntity.ok(Map.of("token", token));
     }
 
     @GetMapping("/{userId}")

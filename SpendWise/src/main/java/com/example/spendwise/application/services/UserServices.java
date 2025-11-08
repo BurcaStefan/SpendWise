@@ -67,4 +67,12 @@ public class UserServices {
 
         return userRepository.deleteUser(userId);
     }
+
+    public String login(String email, String rawPassword) {
+        String token = userRepository.loginUser(email, rawPassword);
+        if (token == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid credentials");
+        }
+        return token;
+    }
 }

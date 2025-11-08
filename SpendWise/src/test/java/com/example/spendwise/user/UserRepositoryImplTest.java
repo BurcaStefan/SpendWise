@@ -4,11 +4,13 @@ import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.domain.entities.User;
 import com.example.spendwise.infrastructure.repositories.user.SpringDataUserRepository;
 import com.example.spendwise.infrastructure.repositories.user.UserRepositoryImpl;
+import com.example.spendwise.infrastructure.security.JwtUtil;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -22,13 +24,19 @@ class UserRepositoryImplTest {
     @Mock
     private SpringDataUserRepository springDataUserRepository;
 
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+    @Mock
+    private JwtUtil jwtUtil;
+
     private UserRepositoryImpl userRepository;
     private UUID testUserId;
     private User testUser;
 
     @BeforeEach
     void setUp() {
-        userRepository = new UserRepositoryImpl(springDataUserRepository);
+        userRepository = new UserRepositoryImpl(springDataUserRepository, passwordEncoder, jwtUtil);
         testUserId = UUID.randomUUID();
         testUser = new User(testUserId, "Ion", "Popescu", "popescu@gmail.com", "parola1234");
     }

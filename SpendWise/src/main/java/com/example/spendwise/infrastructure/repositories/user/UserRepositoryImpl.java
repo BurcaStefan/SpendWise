@@ -3,6 +3,8 @@ package com.example.spendwise.infrastructure.repositories.user;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.domain.entities.User;
 import com.example.spendwise.domain.repositories.IUserRepository;
+import com.example.spendwise.infrastructure.security.JwtUtil;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 import java.util.Optional;
 import java.util.UUID;
@@ -11,10 +13,16 @@ import java.util.UUID;
 public class UserRepositoryImpl implements IUserRepository {
 
     private final SpringDataUserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public UserRepositoryImpl(SpringDataUserRepository userRepository)
+    public UserRepositoryImpl(SpringDataUserRepository userRepository,
+                              PasswordEncoder passwordEncoder,
+                              JwtUtil jwtUtil)
     {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
     @Override
@@ -68,5 +76,19 @@ public class UserRepositoryImpl implements IUserRepository {
         }
         userRepository.deleteById(id);
         return true;
+    }
+
+    @Override
+    public String loginUser(String email, String rawPassword) {
+        Optional<User> maybeUser = userRepository.findByEmail(email);
+        if (maybeUser.isEmpty()) {
+            return null;
+        }
+        User user = maybeUser.get();
+        String storedHash = user.getPassword();
+        if (storedHash != null && passwordEncoder.matches(rawPassword, storedHash)) {
+            return jwtUtil.generateToken(user.getId().toString());
+        }
+        return null;
     }
 }
