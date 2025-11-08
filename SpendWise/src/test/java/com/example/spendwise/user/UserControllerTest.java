@@ -1,6 +1,6 @@
 package com.example.spendwise.user;
 
-import com.example.spendwise.application.controllers.UserController;
+import com.example.spendwise.controllers.UserController;
 import com.example.spendwise.application.dtos.user.CreateUserDto;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;

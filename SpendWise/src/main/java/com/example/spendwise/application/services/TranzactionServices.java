@@ -3,7 +3,7 @@ package com.example.spendwise.application.services;
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.repositories.ITranzactionRepository;
-import com.example.spendwise.application.factory.EntityFactory;
+import com.example.spendwise.domain.factory.EntityFactory;
 import com.example.spendwise.domain.entities.Tranzaction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;

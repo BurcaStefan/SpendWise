@@ -3,7 +3,7 @@ package com.example.spendwise.application.services;
 import com.example.spendwise.application.dtos.user.CreateUserDto;
 import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
 import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
-import com.example.spendwise.application.factory.EntityFactory;
+import com.example.spendwise.domain.factory.EntityFactory;
 import com.example.spendwise.domain.entities.User;
 import com.example.spendwise.domain.repositories.IUserRepository;
 import org.springframework.beans.factory.annotation.Qualifier;

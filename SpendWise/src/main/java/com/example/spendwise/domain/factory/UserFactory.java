@@ -1,4 +1,4 @@
-package com.example.spendwise.application.factory;
+package com.example.spendwise.domain.factory;
 
 import com.example.spendwise.application.dtos.user.CreateUserDto;
 import com.example.spendwise.domain.entities.User;
