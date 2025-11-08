@@ -12,6 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.spendwise.application.dtos.user.LoginUserDto;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -150,4 +154,70 @@ class UserRepositoryImplTest {
         assertFalse(result);
         verify(springDataUserRepository, never()).deleteById(any());
     }
+
+    @Test
+    void loginUser_Success() {
+        String email = "popescu@gmail.com";
+        String rawPassword = "parola1234";
+        String hashedPassword = "$2a$10$hashedPassword";
+        String expectedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+
+        testUser.setPassword(hashedPassword);
+        when(springDataUserRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(true);
+        when(jwtUtil.generateToken(testUserId.toString())).thenReturn(expectedToken);
+
+        String result = userRepository.loginUser(email, rawPassword);
+
+        assertNotNull(result);
+        assertEquals(expectedToken, result);
+        verify(passwordEncoder).matches(rawPassword, hashedPassword);
+        verify(jwtUtil).generateToken(testUserId.toString());
+    }
+
+    @Test
+    void loginUser_InvalidPassword_ReturnsNull() {
+        String email = "popescu@gmail.com";
+        String rawPassword = "wrongpassword";
+        String hashedPassword = "$2a$10$hashedPassword";
+
+        testUser.setPassword(hashedPassword);
+        when(springDataUserRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
+        when(passwordEncoder.matches(rawPassword, hashedPassword)).thenReturn(false);
+
+        String result = userRepository.loginUser(email, rawPassword);
+
+        assertNull(result);
+        verify(passwordEncoder).matches(rawPassword, hashedPassword);
+        verify(jwtUtil, never()).generateToken(any());
+    }
+
+    @Test
+    void loginUser_UserNotFound_ReturnsNull() {
+        String email = "nonexistent@gmail.com";
+        String rawPassword = "parola1234";
+
+        when(springDataUserRepository.findByEmail(email)).thenReturn(Optional.empty());
+
+        String result = userRepository.loginUser(email, rawPassword);
+
+        assertNull(result);
+        verify(passwordEncoder, never()).matches(any(), any());
+        verify(jwtUtil, never()).generateToken(any());
+    }
+
+    @Test
+    void loginUser_NullPassword_ReturnsNull() {
+        String email = "popescu@gmail.com";
+        String rawPassword = "parola1234";
+
+        testUser.setPassword(null);
+        when(springDataUserRepository.findByEmail(email)).thenReturn(Optional.of(testUser));
+
+        String result = userRepository.loginUser(email, rawPassword);
+
+        assertNull(result);
+        verify(passwordEncoder, never()).matches(any(), any());
+    }
+
 }

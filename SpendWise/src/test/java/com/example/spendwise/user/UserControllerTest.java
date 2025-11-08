@@ -13,6 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 
+import com.example.spendwise.application.dtos.user.LoginUserDto;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,4 +129,36 @@ public class UserControllerTest {
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
         assertFalse(response.getBody());
     }
+
+    @Test
+    void login_Success() {
+        LoginUserDto loginDto = new LoginUserDto();
+        loginDto.setEmail("popescu@gmail.com");
+        loginDto.setPassword("parola1234");
+        String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+
+        when(userServices.login(loginDto.getEmail(), loginDto.getPassword())).thenReturn(token);
+
+        var response = userController.login(loginDto);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(token, response.getBody().get("token"));
+    }
+
+    @Test
+    void login_Fail_InvalidCredentials() {
+        LoginUserDto loginDto = new LoginUserDto();
+        loginDto.setEmail("popescu@gmail.com");
+        loginDto.setPassword("wrongpassword");
+
+        when(userServices.login(loginDto.getEmail(), loginDto.getPassword()))
+                .thenThrow(new ResponseStatusException(HttpStatus.NOT_FOUND, "Invalid credentials"));
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> userController.login(loginDto));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Invalid credentials", ex.getReason());
+    }
+
 }

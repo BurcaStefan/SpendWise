@@ -15,6 +15,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.spendwise.application.dtos.user.LoginUserDto;
+import org.springframework.web.server.ResponseStatusException;
+import org.springframework.http.HttpStatus;
+
 import java.util.Optional;
 import java.util.UUID;
 
@@ -148,5 +152,46 @@ class UserServicesTest {
 
         assertThrows(ResponseStatusException.class, () -> userServices.deleteUser(testUserId));
     }
+
+    @Test
+    void login_Success() {
+        String email = "popescu@gmail.com";
+        String password = "parola1234";
+        String expectedToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
+
+        when(userRepository.loginUser(email, password)).thenReturn(expectedToken);
+
+        String result = userServices.login(email, password);
+
+        assertNotNull(result);
+        assertEquals(expectedToken, result);
+        verify(userRepository).loginUser(email, password);
+    }
+
+    @Test
+    void login_InvalidCredentials_ThrowsException() {
+        String email = "popescu@gmail.com";
+        String password = "wrongpassword";
+
+        when(userRepository.loginUser(email, password)).thenReturn(null);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> userServices.login(email, password));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+        assertEquals("Invalid credentials", ex.getReason());
+    }
+
+    @Test
+    void login_UserNotFound_ThrowsException() {
+        String email = "nonexistent@gmail.com";
+        String password = "parola1234";
+
+        when(userRepository.loginUser(email, password)).thenReturn(null);
+
+        ResponseStatusException ex = assertThrows(ResponseStatusException.class,
+                () -> userServices.login(email, password));
+        assertEquals(HttpStatus.NOT_FOUND, ex.getStatusCode());
+    }
+
 
 }
