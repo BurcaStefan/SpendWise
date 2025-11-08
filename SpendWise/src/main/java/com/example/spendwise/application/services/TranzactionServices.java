@@ -5,6 +5,10 @@ import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.repositories.ITranzactionRepository;
 import com.example.spendwise.domain.factory.EntityFactory;
 import com.example.spendwise.domain.entities.Tranzaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -54,5 +58,10 @@ public class TranzactionServices {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tranzaction not found");
         }
         return tranzactionRepository.deleteTranzaction(tranzactionId);
+    }
+
+    public Page<Tranzaction> getTranzactionsByAccountId(UUID accountId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
+        return tranzactionRepository.getTranzactionsByAccountId(accountId, pageable);
     }
 }

@@ -4,6 +4,7 @@ import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.entities.Tranzaction;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,15 @@ public class TranzactionController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @GetMapping("/account/{accountId}")
+    public ResponseEntity<Page<Tranzaction>> getTranzactionsByAccount(
+            @PathVariable UUID accountId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Page<Tranzaction> tranzactions = tranzactionServices.getTranzactionsByAccountId(accountId, page, size);
+        return ResponseEntity.ok(tranzactions);
     }
 
 }
