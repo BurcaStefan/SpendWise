@@ -11,6 +11,7 @@ public class CreateBudgetAccountDto {
     public CreateBudgetAccountDto(UUID userId) {
         this.userId = userId;
     }
+    public CreateBudgetAccountDto() {}
 
     public UUID getUserId() {
         return userId;
