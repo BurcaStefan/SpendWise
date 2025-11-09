@@ -1,8 +1,11 @@
 package com.example.spendwise.controllers;
 
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
+import com.example.spendwise.application.dtos.tranzaction.TranzactionFilterDto;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
+import com.example.spendwise.domain.entities.CategoryType;
 import com.example.spendwise.domain.entities.Tranzaction;
+import com.example.spendwise.domain.entities.TranzactionType;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -55,5 +58,17 @@ public class TranzactionController {
         Page<Tranzaction> tranzactions = tranzactionServices.getTranzactionsByAccountId(accountId, page, size);
         return ResponseEntity.ok(tranzactions);
     }
+
+    @GetMapping("/account/{accountId}/filter")
+    public ResponseEntity<Page<Tranzaction>> filterTranzactionsByAccount(
+            @PathVariable UUID accountId,
+            @ModelAttribute TranzactionFilterDto filterDto,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+
+        Page<Tranzaction> tranzactions = tranzactionServices.filterTranzactionsByAccount(accountId, filterDto, page, size);
+        return ResponseEntity.ok(tranzactions);
+    }
+
 
 }
