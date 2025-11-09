@@ -5,6 +5,7 @@ import com.example.spendwise.domain.repositories.ITranzactionRepository;
 import com.example.spendwise.domain.entities.Tranzaction;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -57,5 +58,17 @@ public class TranzactionRepository implements ITranzactionRepository {
     @Override
     public Page<Tranzaction> getTranzactionsByAccountId(UUID accountId, Pageable pageable) {
         return tranzactionRepository.findByAccountId(accountId, pageable);
+    }
+
+    @Override
+    public Page<Tranzaction> filterTranzactionsByAccount(UUID accountId, Specification<Tranzaction> specification, Pageable pageable) {
+        Specification<Tranzaction> accountSpec = (root, query, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("accountId"), accountId);
+
+        Specification<Tranzaction> combinedSpec = specification != null
+                ? accountSpec.and(specification)
+                : accountSpec;
+
+        return tranzactionRepository.findAll(combinedSpec, pageable);
     }
 }

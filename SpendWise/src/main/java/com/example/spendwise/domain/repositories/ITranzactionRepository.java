@@ -4,6 +4,7 @@ import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.entities.Tranzaction;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.UUID;
 
@@ -13,4 +14,5 @@ public interface ITranzactionRepository {
     Tranzaction getTranzactionById(UUID tranzactionId);
     boolean deleteTranzaction(UUID tranzactionId);
     Page<Tranzaction> getTranzactionsByAccountId(UUID accountId, Pageable pageable);
+    Page<Tranzaction> filterTranzactionsByAccount(UUID accountId, Specification<Tranzaction> specification, Pageable pageable);
 }

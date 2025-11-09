@@ -1,6 +1,7 @@
 package com.example.spendwise.application.services;
 
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
+import com.example.spendwise.application.dtos.tranzaction.TranzactionFilterDto;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.repositories.ITranzactionRepository;
 import com.example.spendwise.domain.factory.EntityFactory;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -19,10 +21,14 @@ import java.util.UUID;
 public class TranzactionServices {
     private final ITranzactionRepository tranzactionRepository;
     private final EntityFactory <Tranzaction, CreateTranzactionDto> tranzactionFactory;
+    private final TranzactionQueryBuilder queryBuilder;
+
     public TranzactionServices(ITranzactionRepository tranzactionRepository,
-                              EntityFactory<Tranzaction, CreateTranzactionDto> tranzactionFactory) {
+                               EntityFactory<Tranzaction, CreateTranzactionDto> tranzactionFactory,
+                               TranzactionQueryBuilder queryBuilder) {
         this.tranzactionRepository = tranzactionRepository;
         this.tranzactionFactory = tranzactionFactory;
+        this.queryBuilder = queryBuilder;
     }
 
     public Tranzaction createtranzaction(CreateTranzactionDto dto) {
@@ -63,5 +69,12 @@ public class TranzactionServices {
     public Page<Tranzaction> getTranzactionsByAccountId(UUID accountId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("date").descending());
         return tranzactionRepository.getTranzactionsByAccountId(accountId, pageable);
+    }
+
+    public Page<Tranzaction> filterTranzactionsByAccount(UUID accountId, TranzactionFilterDto filterDto, int page, int size) {
+        Specification<Tranzaction> specification = queryBuilder.buildSpecification(filterDto);
+        Sort sort = queryBuilder.buildSort(filterDto);
+        Pageable pageable = PageRequest.of(page, size, sort);
+        return tranzactionRepository.filterTranzactionsByAccount(accountId, specification, pageable);
     }
 }
