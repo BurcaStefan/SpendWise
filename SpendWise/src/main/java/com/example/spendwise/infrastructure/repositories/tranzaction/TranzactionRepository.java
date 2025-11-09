@@ -3,6 +3,8 @@ package com.example.spendwise.infrastructure.repositories.tranzaction;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
 import com.example.spendwise.domain.repositories.ITranzactionRepository;
 import com.example.spendwise.domain.entities.Tranzaction;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -50,5 +52,10 @@ public class TranzactionRepository implements ITranzactionRepository {
         }
         tranzactionRepository.deleteById(tranzactionId);
         return true;
+    }
+
+    @Override
+    public Page<Tranzaction> getTranzactionsByAccountId(UUID accountId, Pageable pageable) {
+        return tranzactionRepository.findByAccountId(accountId, pageable);
     }
 }
