@@ -13,12 +13,15 @@ public class RefreshToken {
     @Column(name = "token_id", nullable = false)
     private UUID tokenId;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @OneToOne(optional = false)
+    @JoinColumn(name = "user_id", nullable = false, insertable = false, updatable = false)
     @JsonIgnore
     private User user;
 
-    @Column(name = "token", nullable = false)
+    @Column(name="user_id", nullable = false)
+    private UUID userId;
+
+    @Column(name = "token", nullable = false, unique = true, length = 1000)
     private String token;
 
     @Column(name = "createDate", nullable = false)
@@ -29,19 +32,14 @@ public class RefreshToken {
 
     public RefreshToken() {}
 
-    public RefreshToken(UUID tokenId, User user, String token, LocalDateTime createDate, LocalDateTime expirationDate) {
-        this.tokenId = tokenId;
-        this.user = user;
-        this.token = token;
-        this.createDate = createDate;
-        this.expirationDate = expirationDate;
-    }
-
     public UUID getTokenId() { return tokenId; }
     public void setTokenId(UUID tokenId) { this.tokenId = tokenId; }
 
     public User getUser() { return user; }
     public void setUser(User user) { this.user = user; }
+
+    public UUID getUserId() { return userId; }
+    public void setUserId(UUID userId) { this.userId = userId; }
 
     public String getToken() { return token; }
     public void setToken(String token) { this.token = token; }
