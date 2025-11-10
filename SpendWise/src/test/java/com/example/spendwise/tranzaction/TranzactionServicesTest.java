@@ -2,6 +2,7 @@ package com.example.spendwise.tranzaction;
 
 import com.example.spendwise.application.dtos.tranzaction.CreateTranzactionDto;
 import com.example.spendwise.application.dtos.tranzaction.UpdateTranzactionDto;
+import com.example.spendwise.application.services.TranzactionQueryBuilder;
 import com.example.spendwise.application.services.TranzactionServices;
 import com.example.spendwise.domain.entities.Tranzaction;
 import com.example.spendwise.domain.entities.TranzactionType;
@@ -27,6 +28,8 @@ class TranzactionServicesTest {
     private ITranzactionRepository tranzactionRepository;
     @Mock
     private EntityFactory<Tranzaction, CreateTranzactionDto> tranzactionFactory;
+    @Mock
+    private TranzactionQueryBuilder tranzactionQueryBuilder;
 
     private TranzactionServices tranzactionServices;
     private UUID id;
@@ -34,7 +37,7 @@ class TranzactionServicesTest {
 
     @BeforeEach
     void setUp() {
-        tranzactionServices = new TranzactionServices(tranzactionRepository, tranzactionFactory);
+        tranzactionServices = new TranzactionServices(tranzactionRepository, tranzactionFactory,tranzactionQueryBuilder);
         id = UUID.randomUUID();
         testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.VENIT, CategoryType.HAINE, 100.0, LocalDate.now(), false, "desc");
     }
