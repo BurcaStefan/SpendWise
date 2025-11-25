@@ -31,7 +31,11 @@ public class TranzactionQueryBuilder {
 
     public Sort buildSort(TranzactionFilterDto filterDto) {
         TranzactionSortStrategy sortStrategy = createSortStrategy(filterDto);
-        return sortStrategy != null ? sortStrategy.buildSort() : Sort.by("date").descending();
+        if (sortStrategy != null) {
+            return sortStrategy.buildSort();
+        } else {
+            return Sort.by("date").descending();
+        }
     }
 
     private TranzactionSortStrategy createSortStrategy(TranzactionFilterDto filterDto) {

@@ -65,9 +65,12 @@ public class TranzactionRepository implements ITranzactionRepository {
         Specification<Tranzaction> accountSpec = (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("accountId"), accountId);
 
-        Specification<Tranzaction> combinedSpec = specification != null
-                ? accountSpec.and(specification)
-                : accountSpec;
+        Specification<Tranzaction> combinedSpec;
+        if (specification != null) {
+            combinedSpec = accountSpec.and(specification);
+        } else {
+            combinedSpec = accountSpec;
+        }
 
         return tranzactionRepository.findAll(combinedSpec, pageable);
     }
