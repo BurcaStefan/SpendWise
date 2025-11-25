@@ -1,0 +1,284 @@
+$light-bg: rgba(12, 111, 255, 0.2);
+$light-card-bg: rgba(12, 111, 255, 0.5);
+$light-brand-color: rgba(0, 0, 0, 1);
+$light-tagline-color: rgba(0, 0, 0, 1);
+$light-card-text: rgba(255, 255, 255, 1);
+$light-input-border: rgba(255, 255, 255, 1);
+$light-input-placeholder: rgba(0, 0, 0, 0.5);
+$light-toggle-color: rgba(0, 0, 0, 1);
+$light-btn-login-bg: rgba(0, 0, 0, 1);
+$light-btn-login-color: rgba(255, 255, 255, 1);
+$light-btn-signup-bg: rgba(255, 255, 255, 1);
+$light-btn-signup-color: rgba(0, 0, 0, 1);
+$light-forgot-color: rgba(255, 255, 255, 1);
+
+* { 
+    margin: 0; 
+    padding: 0; 
+    box-sizing: border-box; 
+}
+
+.login-root[data-theme='light'] {
+  --bg: #{$light-bg};
+  --card-bg: #{$light-card-bg};
+  --brand-color: #{$light-brand-color};
+  --tagline-color: #{$light-tagline-color};
+  --card-text: #{$light-card-text};
+  --input-border: #{$light-input-border};
+  --input-placeholder: #{$light-input-placeholder};
+  --toggle-color: #{$light-toggle-color};
+  --btn-login-bg: #{$light-btn-login-bg};
+  --btn-login-color: #{$light-btn-login-color};
+  --btn-signup-bg: #{$light-btn-signup-bg};
+  --btn-signup-color: #{$light-btn-signup-color};
+  --forgot-color: #{$light-forgot-color};
+  --toggle-bg: rgba(255,255,255,0.12);
+}
+
+.login-root[data-theme='dark'] {
+  --bg: #2c3e50;
+  --card-bg: rgba(2,75,255,0.85);
+  --brand-color: rgba(255,255,255,1);
+  --tagline-color: rgba(255,255,255,1);
+  --card-text: rgba(255,255,255,1);
+  --input-border: rgba(0,0,0,1);
+  --input-placeholder: rgba(255,255,255,0.6);
+  --toggle-color: rgba(255,255,255,1);
+  --btn-login-bg: rgba(0,0,0,1);
+  --btn-login-color: rgba(255,255,255,1);
+  --btn-signup-bg: rgba(255,255,255,1);
+  --btn-signup-color: rgba(0,0,0,1);
+  --forgot-color: rgba(255,255,255,1);
+  --toggle-bg: rgba(0,0,0,0.12);
+}
+
+.login-root {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Arial', sans-serif;
+  background: var(--bg);
+}
+
+.login-root .container {
+  display: flex;
+  width: 90%;
+  max-width: 1200px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 80px;
+}
+
+.login-root .left-section { 
+    flex: 1; 
+    text-align: center; 
+}
+.login-root .logo { 
+    margin-bottom: 20px; 
+}
+.login-root .logo img { 
+    width: 400px; 
+    height: 400px; 
+    object-fit: contain; }
+
+.login-root .brand { 
+    font-size: 5rem; 
+    font-weight: bold; 
+    color: var(--brand-color); 
+    margin-bottom: 10px; 
+    letter-spacing: -2px; 
+}
+.login-root .tagline { 
+    font-size: 2rem; 
+    color: var(--tagline-color); 
+    font-weight: 600; 
+}
+
+.login-root .right-section { 
+    flex: 1; 
+    max-width: 600px; 
+}
+
+.login-root .login-card { 
+    position: relative; 
+    background: var(--card-bg); 
+    border-radius: 25px; 
+    padding: 50px 45px; 
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+}
+.login-root .icon { 
+    text-align: center; 
+    margin-bottom: 20px; 
+}
+.login-root .login-card h2 { 
+    text-align: center; 
+    color: var(--card-text); 
+    font-size: 2.5rem; 
+    margin-bottom: 35px; 
+    font-weight: 600; 
+}
+.login-root .form-group { 
+    margin-bottom: 25px; 
+}
+.login-root .form-group label { 
+    display: block; 
+    color: var(--brand-color); 
+    font-size: 1.1rem; 
+    font-weight: 600; 
+    margin-bottom: 8px; 
+}
+.login-root .form-group input { 
+    width: 100%; 
+    padding: 15px 20px; 
+    border: 3px solid var(--input-border); 
+    border-radius: 25px; 
+    background: transparent; 
+    color: var(--brand-color); 
+    font-size: 1rem; 
+    outline: none; 
+    transition: all 0.3s ease; 
+}
+.login-root .form-group input:focus { 
+    background: rgba(255,255,255,0.06); 
+    border-color: var(--input-border); 
+}
+.login-root .form-group input::placeholder { 
+    color: var(--input-placeholder); 
+}
+
+.login-root .password-wrapper { 
+    position: relative; 
+}
+.login-root .toggle-password { 
+    position: absolute; 
+    right: 15px; 
+    top: 50%; 
+    transform: translateY(-50%); 
+    background: none; 
+    border: none; 
+    cursor: pointer; 
+    color: var(--toggle-color); 
+    padding: 5px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; }
+.login-root .toggle-password:hover { 
+    opacity: 0.85; 
+}
+
+.login-root .forgot-password { 
+    display: flex; 
+    gap: 8px; 
+    margin-bottom: 30px; 
+    font-size: 0.95rem; 
+}
+.login-root .forgot-password span { 
+    color: var(--forgot-color); 
+}
+.login-root .forgot-password a { 
+    color: var(--forgot-color); 
+    text-decoration: underline; 
+    font-weight: 600; }
+.login-root .forgot-password a:hover { 
+    opacity: 0.8; 
+}
+
+.login-root .buttons { 
+    display: flex; 
+    gap: 15px; 
+}
+.login-root .btn { 
+    flex: 1; 
+    padding: 15px 25px; 
+    border: none; 
+    border-radius: 25px; 
+    font-size: 1rem; 
+    font-weight: 600; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 10px; 
+    transition: all 0.3s ease; 
+}
+.login-root .btn-icon { 
+    width: 20px; 
+    height: 20px; 
+    object-fit: contain; 
+}
+.login-root .btn-login { 
+    background: var(--btn-login-bg); 
+    color: var(--btn-login-color); 
+}
+.login-root .btn-login:hover { opacity: 0.95; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+.login-root .btn-signup { 
+    background: var(--btn-signup-bg); 
+    color: var(--btn-signup-color); 
+}
+.login-root .btn-signup:hover { 
+    opacity: 0.95; 
+    transform: translateY(-2px); 
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+
+
+.login-root .theme-toggle {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border: none;
+  background: var(--toggle-bg);
+  color: var(--toggle-color);
+  padding: 8px 10px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: all 0.18s ease;
+}
+.login-root .theme-toggle:hover { 
+    transform: translateY(-2px); 
+    box-shadow: 0 6px 18px rgba(0,0,0,0.12); 
+}
+.login-root .theme-toggle svg { 
+    display: block; 
+}
+
+@media (max-width: 968px) {
+    /* On smaller screens hide the left illustration/brand area so the login card takes full focus */
+    .login-root .container {
+        flex-direction: column;
+        gap: 40px;
+    }
+    /* remove the left column (logo + brand) completely at this breakpoint */
+    .login-root .left-section {
+        display: none;
+    }
+    /* right section becomes primary and fills available width */
+    .login-root .right-section {
+        order: 1;
+        width: 100%;
+    }
+    /* center the login card when left section is gone */
+    .login-root .login-card {
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 480px) {
+  .login-root .brand { 
+    font-size: 2.5rem; 
+}
+  .login-root .tagline { 
+    font-size: 1.3rem; 
+}
+  .login-root .login-card { 
+    padding: 35px 25px; 
+}
+  .login-root .buttons { 
+    flex-direction: column; 
+}
+}
