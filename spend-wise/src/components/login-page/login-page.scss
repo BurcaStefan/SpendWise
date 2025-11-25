@@ -248,21 +248,17 @@ $light-forgot-color: rgba(255, 255, 255, 1);
 }
 
 @media (max-width: 968px) {
-    /* On smaller screens hide the left illustration/brand area so the login card takes full focus */
     .login-root .container {
         flex-direction: column;
         gap: 40px;
     }
-    /* remove the left column (logo + brand) completely at this breakpoint */
     .login-root .left-section {
         display: none;
     }
-    /* right section becomes primary and fills available width */
     .login-root .right-section {
         order: 1;
         width: 100%;
     }
-    /* center the login card when left section is gone */
     .login-root .login-card {
         margin: 0 auto;
     }
