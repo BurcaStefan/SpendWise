@@ -21,9 +21,8 @@ export default function LoginPage() {
 
         try {
             await login({ email, password })
-            // AuthContext already logs success; additional component log:
             console.log('Login succeeded (component)')
-            navigate('/dashboard')
+            navigate('/home', { replace: true })
         } catch (err) {
             console.log('Login failed (component)', err)
         }
