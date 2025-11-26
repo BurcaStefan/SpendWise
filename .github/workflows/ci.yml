@@ -65,21 +65,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.npm
-            spend-wise/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('spend-wise/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          node-version: '22'
+          cache: 'npm'
 
       - name: Install dependencies
         working-directory: ./spend-wise
-        run: npm ci
+        run: npm install
 
       - name: Build frontend
         working-directory: ./spend-wise
