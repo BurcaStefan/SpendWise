@@ -51,7 +51,7 @@ jobs:
           done'
 
       - name: Build backend with Maven
-        working-directory: ./backend
+        working-directory: ./SpendWise
         run: mvn -B clean verify
 
   frontend:
@@ -69,17 +69,17 @@ jobs:
           cache: 'npm'
 
       - name: Install dependencies
-        working-directory: ./frontend
+        working-directory: ./spend-wise
         run: npm ci
 
       - name: Build frontend
-        working-directory: ./frontend
+        working-directory: ./spend-wise
         env:
           VITE_API_BASE_URL: http://localhost:9090
         run: npm run build
 
       - name: Run frontend tests
-        working-directory: ./frontend
+        working-directory: ./spend-wise
         env:
           VITE_API_BASE_URL: http://localhost:9090
         run: npm test -- --watchAll=false
