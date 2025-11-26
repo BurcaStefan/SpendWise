@@ -4,16 +4,28 @@ import './login-page.scss'
 import walletImg from '../../assets/wallet.png'
 import loginIcon from '../../assets/login-icon.png'
 import signupIcon from '../../assets/signup-icon.png'
+import useAuth from '../../hooks/useAuth'
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [theme, setTheme] = useState('light')
 
     const navigate = useNavigate()
+    const { login, loading } = useAuth()
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        console.log('login submit')
+        const form = new FormData(e.target)
+        const email = form.get('email')?.toString() || ''
+        const password = form.get('password')?.toString() || ''
+
+        try {
+            await login({ email, password })
+            console.log('Login succeeded (component)')
+            navigate('/home', { replace: true })
+        } catch (err) {
+            console.log('Login failed (component)', err)
+        }
     }
 
     const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
@@ -93,7 +105,7 @@ export default function LoginPage() {
                             </div>
 
                             <div className="buttons">
-                                <button type="submit" className="btn btn-login">
+                                <button type="submit" className="btn btn-login" disabled={loading}>
                                     <img src={loginIcon} alt="Login Icon" width="40" height="28" />
                                     Sign in
                                 </button>
