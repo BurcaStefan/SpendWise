@@ -50,7 +50,8 @@ jobs:
             sleep 4
           done'
 
-      - name: Build with Maven
+      - name: Build backend with Maven
+        working-directory: ./backend
         run: mvn -B clean verify
 
   frontend:
@@ -65,24 +66,20 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-
-      - name: Cache node modules
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
+          cache: 'npm'
 
       - name: Install dependencies
+        working-directory: ./frontend
         run: npm ci
 
       - name: Build frontend
+        working-directory: ./frontend
         env:
           VITE_API_BASE_URL: http://localhost:9090
         run: npm run build
 
       - name: Run frontend tests
+        working-directory: ./frontend
         env:
           VITE_API_BASE_URL: http://localhost:9090
         run: npm test -- --watchAll=false
