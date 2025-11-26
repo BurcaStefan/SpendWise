@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import './login-page.scss'
 import walletImg from '../../assets/wallet.png'
 import loginIcon from '../../assets/login-icon.png'
@@ -7,6 +8,8 @@ import signupIcon from '../../assets/signup-icon.png'
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [theme, setTheme] = useState('light')
+
+    const navigate = useNavigate()
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -94,7 +97,7 @@ export default function LoginPage() {
                                     <img src={loginIcon} alt="Login Icon" width="40" height="28" />
                                     Sign in
                                 </button>
-                                <button type="button" className="btn btn-signup">
+                                <button type="button" className="btn btn-signup" onClick={() => navigate('/register')}>
                                     <img src={signupIcon} alt="Signup Icon" width="40" height="28" />
                                     Create account
                                 </button>
