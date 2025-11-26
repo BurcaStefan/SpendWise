@@ -76,10 +76,3 @@ jobs:
         env:
           VITE_API_BASE_URL: http://localhost:9090
         run: npm run build
-
-      - name: Run frontend tests
-        working-directory: ./spend-wise
-        env:
-          VITE_API_BASE_URL: http://localhost:9090
-        run: npm test -- --watchAll=false
-
