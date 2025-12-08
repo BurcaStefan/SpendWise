@@ -5,16 +5,149 @@ import './registration-page.scss'
 import walletImg from '../../assets/wallet.png'
 import signupIcon from '../../assets/signup-icon.png'
 import useTheme from '../../hooks/useTheme'
+import { RegisterUserDto } from '../../dto/userDto'
+import { hashText, verifyHash } from '../../utils/hashUtils'
 
 export default function RegistrationPage() {
 	const [showPassword, setShowPassword] = useState(false)
 	const { theme, toggleTheme } = useTheme()
-
 	const navigate = useNavigate()
 
-	const handleSubmit = (e) => {
+	const [formData, setFormData] = useState({
+		firstName: '',
+		lastName: '',
+		email: '',
+		password: '',
+		confirmPassword: '',
+		verificationCode: ''
+	})
+
+	const [isCodeSent, setIsCodeSent] = useState(false)
+	const [isCodeVerified, setIsCodeVerified] = useState(false)
+	const [isSendingCode, setIsSendingCode] = useState(false)
+	const [error, setError] = useState('')
+	const [loading, setLoading] = useState(false)
+
+	const handleInputChange = (e) => {
+		const { name, value } = e.target
+		setFormData(prev => ({ ...prev, [name]: value }))
+		setError('')
+	}
+
+	const handleSendCode = async () => {
+		if (!formData.email) {
+			setError('Please enter an email address')
+			return
+		}
+
+		setIsSendingCode(true)
+		setError('')
+
+		try {
+			const response = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/email/send-email-verification-code?email=${encodeURIComponent(formData.email)}`,
+				{
+					method: 'POST'
+				}
+			)
+
+			if (!response.ok) {
+				throw new Error('Failed to send verification code')
+			}
+
+			const data = await response.json()
+
+			const codeValue = data.code !== undefined ? data.code : data
+			const codeString = String(codeValue)
+			const hashedCode = await hashText(codeString)
+			localStorage.setItem('verificationCodeHash', hashedCode)
+
+			setIsCodeSent(true)
+			setError('')
+		} catch (err) {
+			console.error('Error sending verification code:', err)
+			setError('Failed to send verification code. Please try again.')
+		} finally {
+			setIsSendingCode(false)
+		}
+	}
+
+	const handleVerifyCode = async () => {
+		if (!formData.verificationCode) {
+			setError('Please enter the verification code')
+			return
+		}
+
+		const storedHash = localStorage.getItem('verificationCodeHash')
+		if (!storedHash) {
+			setError('No verification code found. Please request a new code.')
+			return
+		}
+
+		try {
+			const isValid = await verifyHash(formData.verificationCode, storedHash)
+
+			if (isValid) {
+				setIsCodeVerified(true)
+				setError('')
+			} else {
+				setError('Invalid verification code. Please try again.')
+			}
+		} catch (err) {
+			console.error('Error verifying code:', err)
+			setError('Error verifying code. Please try again.')
+		}
+	}
+
+	const handleSubmit = async (e) => {
 		e.preventDefault()
-		console.log('register submit')
+		setError('')
+
+		if (!formData.firstName || !formData.lastName || !formData.email || !formData.password || !formData.confirmPassword) {
+			setError('All fields are required')
+			return
+		}
+
+		if (formData.password !== formData.confirmPassword) {
+			setError('Passwords do not match')
+			return
+		}
+
+		if (!isCodeVerified) {
+			setError('Please verify your email address first')
+			return
+		}
+
+		setLoading(true)
+
+		try {
+			const registerDto = RegisterUserDto.fromFormData(formData)
+
+			const response = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(registerDto)
+				}
+			)
+
+			if (!response.ok) {
+				const errorData = await response.json()
+				throw new Error(errorData.message || 'Registration failed')
+			}
+
+			localStorage.removeItem('verificationCodeHash')
+
+			navigate('/login')
+		} catch (err) {
+			console.error('Registration error:', err)
+			setError(err.message || 'Registration failed. Please try again.')
+		} finally {
+			setLoading(false)
+		}
 	}
 
 	return (
@@ -44,27 +177,71 @@ export default function RegistrationPage() {
 						<form onSubmit={handleSubmit}>
 							<div className="form-group">
 								<label htmlFor="nume">First name</label>
-								<input type="text" id="nume" name="nume" required />
+								<input 
+									type="text" 
+									id="nume" 
+									name="firstName" 
+									value={formData.firstName}
+									onChange={handleInputChange}
+									required 
+								/>
 							</div>
 
 							<div className="form-group">
 								<label htmlFor="prenume">Last name</label>
-								<input type="text" id="prenume" name="prenume" required />
+								<input 
+									type="text" 
+									id="prenume" 
+									name="lastName" 
+									value={formData.lastName}
+									onChange={handleInputChange}
+									required 
+								/>
 							</div>
 
 							<div className="form-group">
 								<label htmlFor="email">Email address</label>
 								<div className="inline-row email-row">
-									<input type="email" id="email" name="email" required />
-									<button type="button" className="btn btn-send">Send code</button>
+									<input 
+										type="email" 
+										id="email" 
+										name="email" 
+										value={formData.email}
+										onChange={handleInputChange}
+										disabled={isCodeSent}
+										required 
+									/>
+									<button 
+										type="button" 
+										className="btn btn-send"
+										onClick={handleSendCode}
+										disabled={isSendingCode || isCodeSent}
+									>
+										{isSendingCode ? 'Sending...' : isCodeSent ? 'Code sent' : 'Send code'}
+									</button>
 								</div>
 							</div>
 
 							<div className="form-group">
 								<label htmlFor="verificationCode">Verification code</label>
 								<div className="inline-row code-row">
-									<input type="text" id="verificationCode" name="verificationCode" placeholder="Enter code" />
-									<button type="button" className="btn btn-verify">Verify</button>
+									<input 
+										type="text" 
+										id="verificationCode" 
+										name="verificationCode" 
+										value={formData.verificationCode}
+										onChange={handleInputChange}
+										placeholder="Enter code"
+										disabled={!isCodeSent || isCodeVerified}
+									/>
+									<button 
+										type="button" 
+										className={`btn btn-verify ${isCodeVerified ? 'verified' : ''}`}
+										onClick={handleVerifyCode}
+										disabled={!isCodeSent || isCodeVerified}
+									>
+										{isCodeVerified ? '✓ Verified' : 'Verify'}
+									</button>
 								</div>
 							</div>
 
@@ -75,6 +252,8 @@ export default function RegistrationPage() {
 										type={showPassword ? 'text' : 'password'}
 										id="password"
 										name="password"
+										value={formData.password}
+										onChange={handleInputChange}
 										required
 									/>
 									<button
@@ -98,12 +277,14 @@ export default function RegistrationPage() {
 										type={showPassword ? 'text' : 'password'}
 										id="confirm-password"
 										name="confirmPassword"
+										value={formData.confirmPassword}
+										onChange={handleInputChange}
 										required
 									/>
 									<button
 										type="button"
 										className="toggle-password"
-										aria-label={showPassword ? 'Ascunde parola' : 'Arata parola'}
+										aria-label={showPassword ? 'Hide password' : 'Show password'}
 										onClick={() => setShowPassword((s) => !s)}
 									>
 										<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -119,11 +300,12 @@ export default function RegistrationPage() {
 								<a href="#" onClick={(e) => { e.preventDefault(); navigate('/login') }}>Sign in here</a>
 							</div>
 
+							{error && <div className="error-message">{error}</div>}
+
 							<div className="buttons">
-								<button type="submit" className="btn btn-login">
+								<button type="submit" className="btn btn-login" disabled={loading || !isCodeVerified}>
 									<img src={signupIcon} alt="Signup Icon" width="40" height="28" />
-                  
-									Create account
+									{loading ? 'Creating account...' : 'Create account'}
 								</button>
 							</div>
 						</form>

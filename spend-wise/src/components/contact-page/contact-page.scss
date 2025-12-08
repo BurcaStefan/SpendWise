@@ -11,7 +11,7 @@ $light-btn-text: rgba(0, 0, 0, 1);
 $dark-bg: rgba(20, 25, 30, 1);
 $dark-card-bg: rgba(30, 40, 50, 1);
 $dark-text: rgba(255, 255, 255, 1);
-$dark-label: rgba(220, 220, 220, 1);
+$dark-label: rgba(180, 180, 180, 1);
 $dark-input-border: rgba(80, 90, 100, 1);
 $dark-input-focus: rgba(121, 229, 255, 1);
 $dark-btn-bg: rgba(121, 229, 255, 1);
@@ -95,7 +95,7 @@ $dark-btn-text: rgba(0, 0, 0, 1);
 .form-group label {
   font-size: 1rem;
   font-weight: 600;
-  color: var(--label, rgba(60, 60, 60, 1));
+  color: var(--label);
 }
 
 .form-group input,
