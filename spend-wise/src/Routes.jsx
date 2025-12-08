@@ -4,6 +4,7 @@ import Login from './components/login-page/login-page'
 import Registration from './components/registration-page/registration-page'
 import Home from './components/home-page/home-page'
 import Contact from './components/contact-page/contact-page'
+import ProfilePage from './components/profile-page/profile-page'
 
 export default function AppRoutes() {
 	return (
@@ -14,6 +15,7 @@ export default function AppRoutes() {
 				<Route path="/register" element={<Registration />} />
 				<Route path="/home" element={<Home />} />
 				<Route path="/contact" element={<Contact />} />
+				<Route path="/profile" element={<ProfilePage />} />
 			</Routes>
 		</BrowserRouter>
 	)
