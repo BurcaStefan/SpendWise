@@ -41,7 +41,7 @@ public class TranzactionServices {
         if (tranzacaton == null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Tranzaction not found");
         }
-
+        //TODO: Patch operations REST RFC
         tranzacaton.setType(dto.getTranzactionType());
         tranzacaton.setCategory(dto.getCategoryType());
         tranzacaton.setValue(dto.getValue());

@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import './registration-page.scss'
 import walletImg from '../../assets/wallet.png'
 import signupIcon from '../../assets/signup-icon.png'
+import useTheme from '../../hooks/useTheme'
 
 export default function RegistrationPage() {
 	const [showPassword, setShowPassword] = useState(false)
-	const [theme, setTheme] = useState('light')
+	const { theme, toggleTheme } = useTheme()
 
 	const navigate = useNavigate()
 
@@ -15,8 +16,6 @@ export default function RegistrationPage() {
 		e.preventDefault()
 		console.log('register submit')
 	}
-
-	const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
 	return (
 		<div className="register-root" data-theme={theme}>

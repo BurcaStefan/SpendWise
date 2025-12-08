@@ -5,10 +5,11 @@ import walletImg from '../../assets/wallet.png'
 import loginIcon from '../../assets/login-icon.png'
 import signupIcon from '../../assets/signup-icon.png'
 import useAuth from '../../hooks/useAuth'
+import useTheme from '../../hooks/useTheme'
 
 export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
-    const [theme, setTheme] = useState('light')
+    const { theme, toggleTheme } = useTheme()
 
     const navigate = useNavigate()
     const { login, loading } = useAuth()
@@ -27,8 +28,6 @@ export default function LoginPage() {
             console.log('Login failed (component)', err)
         }
     }
-
-    const toggleTheme = () => setTheme((t) => (t === 'light' ? 'dark' : 'light'))
 
     return (
         <div className="login-root" data-theme={theme}>
