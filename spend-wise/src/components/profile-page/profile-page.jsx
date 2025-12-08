@@ -93,9 +93,7 @@ export default function ProfilePage() {
     try {
       if (editedData.firstName || editedData.lastName) {
         const namesDto = UpdateNamesDto.fromFormData(editedData)
-        
-        console.log('Sending names update request:', namesDto)
-        
+                
         const namesResponse = await fetch(
           `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/${userId}/names`,
           {
@@ -107,8 +105,6 @@ export default function ProfilePage() {
             body: JSON.stringify(namesDto)
           }
         )
-
-        console.log('Names update response status:', namesResponse.status)
         
         if (!namesResponse.ok) {
           const errorData = await namesResponse.json()
@@ -117,15 +113,11 @@ export default function ProfilePage() {
         }
         
         const namesData = await namesResponse.json()
-        console.log('Names updated successfully:', namesData)
       }
 
-      // Update password if provided
       if (editedData.password && editedData.password.trim() !== '') {
         const passwordDto = UpdatePasswordDto.fromFormData(editedData)
-        
-        console.log('Sending password update request')
-        
+                
         const passwordResponse = await fetch(
           `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/${userId}/password`,
           {
@@ -138,8 +130,6 @@ export default function ProfilePage() {
           }
         )
 
-        console.log('Password update response status:', passwordResponse.status)
-
         if (!passwordResponse.ok) {
           const errorData = await passwordResponse.json()
           console.error('Password update error:', errorData)
@@ -147,14 +137,12 @@ export default function ProfilePage() {
         }
         
         const passwordData = await passwordResponse.json()
-        console.log('Password updated successfully:', passwordData)
       }
 
       await fetchUserData()
       setShowAccountMenu(false)
       setEditedData(prev => ({ ...prev, password: '', currentPassword: '' }))
       setError(null)
-      console.log('All updates completed successfully')
     } catch (err) {
       console.error('Update error:', err)
       setError(err.message)
