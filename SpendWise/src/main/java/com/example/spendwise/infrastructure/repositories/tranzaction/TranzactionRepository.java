@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -73,5 +74,10 @@ public class TranzactionRepository implements ITranzactionRepository {
         }
 
         return tranzactionRepository.findAll(combinedSpec, pageable);
+    }
+
+    @Override
+    public List<Tranzaction> findAll(Specification<Tranzaction> spec) {
+        return tranzactionRepository.findAll(spec);
     }
 }

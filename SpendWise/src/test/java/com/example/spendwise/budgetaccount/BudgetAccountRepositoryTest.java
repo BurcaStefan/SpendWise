@@ -5,10 +5,12 @@ import com.example.spendwise.application.dtos.budgetaccount.UpdateBalanceBudgetA
 import com.example.spendwise.domain.entities.BudgetAccount;
 import com.example.spendwise.infrastructure.repositories.budgetaccount.BudgetAccountRepository;
 import com.example.spendwise.infrastructure.repositories.budgetaccount.SpringDataBudgetAccountRepository;
+import com.example.spendwise.infrastructure.repositories.tranzaction.SpringDataTranzactionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -29,12 +31,11 @@ class BudgetAccountRepositoryTest {
     private UUID testUserId;
     private BudgetAccount testBudgetAccount;
 
+
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.openMocks(this);
         budgetAccountRepository = new BudgetAccountRepository(springDataBudgetAccountRepository);
-        testAccountId = UUID.randomUUID();
-        testUserId = UUID.randomUUID();
-        testBudgetAccount = new BudgetAccount(testAccountId, testUserId, 1000.00);
     }
 
     @Test

@@ -44,6 +44,14 @@ public class BudgetAccountServices {
         return budgetAccountRepository.getBudgetAccountById(budgetAccountId);
     }
 
+    public UUID getBudgetAccountIdByUserId(UUID userId) {
+        BudgetAccount account = budgetAccountRepository.findByUserId(userId);
+        if (account == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Budget account not found for user: " + userId);
+        }
+        return account.getBudgetAccountId();
+    }
+
     public BudgetAccount updateBudgetAccount(UUID budgetAccountId, UpdateBalanceBudgetAccountDto dto) {
         if(budgetAccountRepository.getBudgetAccountById(budgetAccountId)==null){
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Budget Account not found");

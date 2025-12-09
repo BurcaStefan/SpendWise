@@ -39,12 +39,12 @@ class TranzactionServicesTest {
     void setUp() {
         tranzactionServices = new TranzactionServices(tranzactionRepository, tranzactionFactory,tranzactionQueryBuilder);
         id = UUID.randomUUID();
-        testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.VENIT, CategoryType.HAINE, 100.0, LocalDate.now(), false, "desc");
+        testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.INCOME, CategoryType.CLOTHING, 100.0, LocalDate.now(), false, "desc");
     }
 
     @Test
     void createTranzaction_Success() {
-        CreateTranzactionDto dto = new CreateTranzactionDto(testTranzaction.getAccountId(), TranzactionType.VENIT, CategoryType.HAINE, 100.0, false, "desc");
+        CreateTranzactionDto dto = new CreateTranzactionDto(testTranzaction.getAccountId(), TranzactionType.INCOME, CategoryType.CLOTHING, 100.0, false, "desc");
         when(tranzactionFactory.create(dto)).thenReturn(testTranzaction);
         when(tranzactionRepository.createTranzaction(testTranzaction)).thenReturn(testTranzaction);
 
@@ -58,7 +58,7 @@ class TranzactionServicesTest {
 
     @Test
     void updateTranzaction_Success() {
-        UpdateTranzactionDto dto = new UpdateTranzactionDto(TranzactionType.CHELTUIALA, CategoryType.HAINE, LocalDate.now(), 50.0, true, "upd");
+        UpdateTranzactionDto dto = new UpdateTranzactionDto(TranzactionType.EXPENSE, CategoryType.CLOTHING, LocalDate.now(), 50.0, true, "upd");
         when(tranzactionRepository.getTranzactionById(id)).thenReturn(testTranzaction);
         when(tranzactionRepository.updateTranzaction(id, dto)).thenReturn(testTranzaction);
 

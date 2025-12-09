@@ -43,3 +43,35 @@ export class RegisterUserDto {
     )
   }
 }
+
+export class LoginDto {
+  constructor(email, password) {
+    this.email = email
+    this.password = password
+  }
+
+  static fromCredentials(credentials) {
+    return new LoginDto(
+      credentials.email || '',
+      credentials.password || ''
+    )
+  }
+}
+
+export class ContactFormDto {
+  constructor(name, email, subject, message) {
+    this.name = name
+    this.email = email
+    this.subject = subject
+    this.message = message
+  }
+
+  static fromFormData(data) {
+    return new ContactFormDto(
+      data.name || '',
+      data.email || '',
+      data.subject || '',
+      data.message || ''
+    )
+  }
+}
