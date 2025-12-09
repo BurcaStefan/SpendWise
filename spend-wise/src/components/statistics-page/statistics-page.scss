@@ -322,6 +322,40 @@ $dark-btn-active: rgba(121, 229, 255, 1);
   }
 }
 
+.line-chart-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+
+  svg {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.total-income {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 24px;
+  background: var(--bg);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+
+  .total-label {
+    color: var(--text-secondary);
+  }
+
+  .total-amount {
+    color: #4CAF50;
+    font-size: 1.4rem;
+  }
+}
+
 @media (max-width: 1200px) {
   .statistics-content {
     grid-template-columns: 1fr;

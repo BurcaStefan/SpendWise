@@ -3,6 +3,7 @@ import './contact-page.scss'
 import Header from '../header/header'
 import Footer from '../footer/footer'
 import useTheme from '../../hooks/useTheme'
+import { ContactFormDto } from '../../dto/userDto'
 
 export default function ContactPage() {
   const { theme } = useTheme()
@@ -31,12 +32,14 @@ export default function ContactPage() {
     setSuccess(false)
 
     try {
+      const contactDto = ContactFormDto.fromFormData(formData);
+      
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/email/send-contact-form`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(contactDto)
       })
 
       if (!response.ok) {

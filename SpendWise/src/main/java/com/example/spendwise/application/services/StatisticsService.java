@@ -1,5 +1,6 @@
 package com.example.spendwise.application.services;
 
+import com.example.spendwise.application.dtos.statistics.AnnualIncomeStatisticsDto;
 import com.example.spendwise.application.dtos.statistics.CategoryStatDto;
 import com.example.spendwise.application.dtos.statistics.StatisticsResponseDto;
 import com.example.spendwise.domain.entities.CategoryType;
@@ -85,4 +86,35 @@ public class StatisticsService {
 
         return new StatisticsResponseDto(categories, Math.round(total * 100.0) / 100.0, period);
     }
+
+    public AnnualIncomeStatisticsDto getAnnualIncomeStatistics(UUID accountId, Integer year) {
+        LocalDate startOfYear = LocalDate.of(year, 1, 1);
+        LocalDate endOfYear = LocalDate.of(year, 12, 31);
+
+        Specification<Tranzaction> spec = (root, query, cb) -> cb.and(
+                cb.equal(root.get("accountId"), accountId),
+                cb.equal(root.get("type"), TranzactionType.INCOME),
+                cb.between(root.get("date"), startOfYear, endOfYear)
+        );
+
+        List<Tranzaction> transactions = tranzactionRepository.findAll(spec);
+
+        Map<Integer, Double> incomeByMonth = initializeMonthMap();
+        transactions.forEach(t -> {
+            int month = t.getDate().getMonthValue();
+            incomeByMonth.put(month, incomeByMonth.get(month) + t.getValue());
+        });
+
+        return new AnnualIncomeStatisticsDto(year, incomeByMonth);
+    }
+
+    private Map<Integer, Double> initializeMonthMap() {
+        Map<Integer, Double> monthMap = new HashMap<>();
+        for (int i = 1; i <= 12; i++) {
+            monthMap.put(i, 0.0);
+        }
+        return monthMap;
+    }
+
+
 }

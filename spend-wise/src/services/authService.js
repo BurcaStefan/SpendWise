@@ -1,9 +1,12 @@
 import { request } from './apiClient';
+import { LoginDto } from '../dto/userDto';
 
 async function login({ email, password }) {
+  const loginDto = LoginDto.fromCredentials({ email, password });
+  
   return request('/api/users/login', {
     method: 'POST',
-    body: JSON.stringify({ email, password }),
+    body: JSON.stringify(loginDto),
   });
 }
 
