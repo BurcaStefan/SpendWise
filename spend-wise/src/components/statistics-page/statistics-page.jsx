@@ -328,7 +328,6 @@ export default function StatisticsPage() {
       <div className="line-chart-container">
         <div className="chart-export-content" ref={lineChartRef}>
           <svg width={chartWidth} height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight}`}>
-          {/* Grid lines */}
           {[0, 1, 2, 3, 4].map(i => {
             const y = chartHeight - padding.bottom - (i / 4) * plotHeight
             return (
@@ -356,7 +355,6 @@ export default function StatisticsPage() {
             )
           })}
 
-          {/* X-axis labels */}
           {monthlyIncome.map((d, i) => {
             const x = xScale(d.month)
             return (
@@ -373,7 +371,6 @@ export default function StatisticsPage() {
             )
           })}
 
-          {/* Line path */}
           <path
             d={pathData}
             fill="none"
@@ -383,7 +380,6 @@ export default function StatisticsPage() {
             strokeLinejoin="round"
           />
 
-          {/* Data points */}
           {monthlyIncome.map((d, i) => (
             <g key={i}>
               <circle
@@ -409,7 +405,6 @@ export default function StatisticsPage() {
             </g>
           ))}
 
-          {/* Axes */}
           <line
             x1={padding.left}
             y1={chartHeight - padding.bottom}

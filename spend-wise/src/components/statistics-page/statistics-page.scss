@@ -368,7 +368,7 @@ $dark-btn-active: rgba(121, 229, 255, 1);
   }
 
   .statistics-card {
-    padding: 24px 16px;
+    padding: 24px 8px;
 
     h2 {
       font-size: 1.5rem;
@@ -376,7 +376,6 @@ $dark-btn-active: rgba(121, 229, 255, 1);
   }
 
   .pie-chart-container svg {
-    width: 100%;
     height: auto;
   }
 }

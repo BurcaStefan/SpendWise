@@ -36,7 +36,12 @@ class BudgetAccountRepositoryTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
         budgetAccountRepository = new BudgetAccountRepository(springDataBudgetAccountRepository);
+
+        testAccountId = UUID.randomUUID();
+        testUserId = UUID.randomUUID();
+        testBudgetAccount = new BudgetAccount(testAccountId, testUserId, 1000.00);
     }
+
 
     @Test
     void createBudgetAccount_Success() {
