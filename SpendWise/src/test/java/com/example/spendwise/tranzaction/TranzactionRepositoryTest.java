@@ -32,7 +32,7 @@ class TranzactionRepositoryTest {
     void setUp() {
         repository = new TranzactionRepository(springRepo);
         id = UUID.randomUUID();
-        testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.VENIT, CategoryType.HAINE, 200.0, LocalDate.now(), false, "desc");
+        testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.INCOME, CategoryType.CLOTHING, 200.0, LocalDate.now(), false, "desc");
     }
 
     @Test
@@ -48,7 +48,7 @@ class TranzactionRepositoryTest {
 
     @Test
     void updateTranzaction_Success() {
-        UpdateTranzactionDto dto = new UpdateTranzactionDto(TranzactionType.CHELTUIALA, CategoryType.HAINE, LocalDate.now(), 80.0, true, "u");
+        UpdateTranzactionDto dto = new UpdateTranzactionDto(TranzactionType.EXPENSE, CategoryType.CLOTHING, LocalDate.now(), 80.0, true, "u");
         when(springRepo.findById(id)).thenReturn(Optional.of(testTranzaction));
         when(springRepo.save(any(Tranzaction.class))).thenReturn(testTranzaction);
 

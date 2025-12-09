@@ -34,12 +34,12 @@ class TranzactionControllerTest {
     void setUp() {
         controller = new TranzactionController(tranzactionServices);
         id = UUID.randomUUID();
-        testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.VENIT, CategoryType.HAINE, 120.0, LocalDate.now(), false, "desc");
+        testTranzaction = new Tranzaction(id, UUID.randomUUID(), TranzactionType.INCOME, CategoryType.CLOTHING, 120.0, LocalDate.now(), false, "desc");
     }
 
     @Test
     void createTranzaction_Success() {
-        CreateTranzactionDto dto = new CreateTranzactionDto(testTranzaction.getAccountId(), TranzactionType.VENIT, CategoryType.HAINE, 120.0, false, "desc");
+        CreateTranzactionDto dto = new CreateTranzactionDto(testTranzaction.getAccountId(), TranzactionType.INCOME, CategoryType.CLOTHING, 120.0, false, "desc");
         when(tranzactionServices.createtranzaction(dto)).thenReturn(testTranzaction);
 
         var response = controller.createTranzaction(dto);
@@ -68,7 +68,7 @@ class TranzactionControllerTest {
 
     @Test
     void updateTranzaction_Success() {
-        UpdateTranzactionDto dto = new UpdateTranzactionDto(TranzactionType.CHELTUIALA, CategoryType.HAINE, LocalDate.now(), 50.0, true, "u");
+        UpdateTranzactionDto dto = new UpdateTranzactionDto(TranzactionType.EXPENSE, CategoryType.CLOTHING, LocalDate.now(), 50.0, true, "u");
         when(tranzactionServices.updateTranzaction(id, dto)).thenReturn(testTranzaction);
 
         var response = controller.updateTranzaction(id, dto);

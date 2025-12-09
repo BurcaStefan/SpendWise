@@ -35,6 +35,11 @@ public class BudgetAccountRepository implements IBudgetAccountRepository {
     }
 
     @Override
+    public BudgetAccount findByUserId(UUID userId) {
+        return budgetAccountRepository.findByUserId(userId).orElse(null);
+    }
+
+    @Override
     public BudgetAccount updateBudgetAccount(UUID id, UpdateBalanceBudgetAccountDto dto) {
         BudgetAccount budgetAccount = budgetAccountRepository.findById(id).orElse(null);
         if (budgetAccount == null) {

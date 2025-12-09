@@ -31,6 +31,11 @@ public class BudgetAccountController {
         GetBudgetAccountByIdDto budgetAccount = budgetAccountServices.getBudgetAccountById(accountId);
         return ResponseEntity.ok(budgetAccount);
     }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<UUID> getBudgetAccountIdByUserId(@PathVariable UUID userId) {
+        UUID accountId = budgetAccountServices.getBudgetAccountIdByUserId(userId);
+        return ResponseEntity.ok(accountId);
+    }
 
     @PutMapping("/{accountId}")
     public ResponseEntity<BudgetAccount> updateBudgetAccount(@PathVariable UUID accountId,
