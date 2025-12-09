@@ -135,6 +135,61 @@ $dark-btn-active: rgba(121, 229, 255, 1);
   color: var(--text);
 }
 
+.export-buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 24px;
+}
+
+.export-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.pdf-btn {
+  background: #ff4757;
+  color: white;
+  border-color: #ff4757;
+
+  &:hover {
+    background: #ff3838;
+  }
+}
+
+.excel-btn {
+  background: #1dd1a1;
+  color: white;
+  border-color: #1dd1a1;
+
+  &:hover {
+    background: #10ac84;
+  }
+}
+
 .chart-legend {
   display: grid;
   grid-template-columns: 1fr 1fr;

@@ -1,9 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import './statistics-page.scss'
 import Header from '../header/header'
 import Footer from '../footer/footer'
 import useTheme from '../../hooks/useTheme'
 import { getUserIdFromToken } from '../../services/authService'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
+import * as XLSX from 'xlsx'
 
 export default function StatisticsPage() {
   const { theme } = useTheme()
@@ -15,6 +18,7 @@ export default function StatisticsPage() {
   const [accountId, setAccountId] = useState(null)
   const [hoveredSlice, setHoveredSlice] = useState(null)
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 })
+  const chartRef = useRef(null)
 
   const months = [
     'January', 'February', 'March', 'April', 'May', 'June',
@@ -41,7 +45,6 @@ export default function StatisticsPage() {
     }
 
     try {
-      console.log('Fetching account ID for user:', userId)
       const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/budget-accounts/user/${userId}`,
         {
@@ -58,7 +61,6 @@ export default function StatisticsPage() {
       }
 
       const accountIdResponse = await response.text()
-      console.log('Account ID received:', accountIdResponse)
       setAccountId(accountIdResponse.replace(/"/g, ''))
     } catch (err) {
       console.error('Error fetching account ID:', err)
@@ -80,7 +82,6 @@ export default function StatisticsPage() {
 
     try {
       const url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/statistics/expenses/${accountId}?month=${selectedMonth}&year=${selectedYear}`
-      console.log('Fetching statistics from:', url)
       
       const response = await fetch(url, {
         method: 'GET',
@@ -90,7 +91,6 @@ export default function StatisticsPage() {
         }
       })
 
-      console.log('Response status:', response.status)
 
       if (!response.ok) {
         const errorText = await response.text()
@@ -99,13 +99,77 @@ export default function StatisticsPage() {
       }
 
       const data = await response.json()
-      console.log('Statistics data received:', data)
       setMonthlyData(data)
     } catch (err) {
       console.error('Error fetching statistics:', err)
       setError(err.message)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const exportToPDF = async () => {
+    if (!chartRef.current || !monthlyData) return
+
+    try {
+      const canvas = await html2canvas(chartRef.current, {
+        backgroundColor: '#ffffff',
+        scale: 2
+      })
+      
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('p', 'mm', 'a4')
+      
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+      
+      pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight)
+      
+      const monthName = months[selectedMonth - 1]
+      pdf.save(`Cheltuieli_${monthName}_${selectedYear}.pdf`)
+    } catch (error) {
+      console.error('Error generating PDF:', error)
+      alert('Failed to generate PDF')
+    }
+  }
+
+  const exportToExcel = () => {
+    if (!monthlyData || !monthlyData.categories) return
+
+    try {
+      const total = monthlyData.total
+      const data = monthlyData.categories.map(category => ({
+        'Categorie': category.name,
+        'Suma (€)': category.amount.toFixed(2),
+        'Procent (%)': ((category.amount / total) * 100).toFixed(2),
+        'Culoare': category.color
+      }))
+
+      data.push({
+        'Categorie': 'TOTAL',
+        'Suma (€)': total.toFixed(2),
+        'Procent (%)': '100.00',
+        'Culoare': ''
+      })
+
+      const worksheet = XLSX.utils.json_to_sheet(data)
+      
+      const colWidths = [
+        { wch: 20 },
+        { wch: 15 },
+        { wch: 15 },
+        { wch: 15 }
+      ]
+      worksheet['!cols'] = colWidths
+
+      const workbook = XLSX.utils.book_new()
+      const monthName = months[selectedMonth - 1]
+      XLSX.utils.book_append_sheet(workbook, worksheet, `${monthName} ${selectedYear}`)
+      
+      XLSX.writeFile(workbook, `Cheltuieli_${monthName}_${selectedYear}.xlsx`)
+    } catch (error) {
+      console.error('Error generating Excel:', error)
+      alert('Failed to generate Excel file')
     }
   }
 
@@ -188,36 +252,38 @@ export default function StatisticsPage() {
 
     return (
       <div className="pie-chart-container">
-        <div style={{ position: 'relative' }}>
-          <svg width="300" height="300" viewBox="0 0 300 300">
-            {slices}
-          </svg>
-          {hoveredSlice !== null && (
-            <div 
-              className="chart-tooltip"
-              style={{
-                position: 'absolute',
-                left: `${tooltipPosition.x}px`,
-                top: `${tooltipPosition.y}px`,
-                transform: 'translate(-50%, -120%)',
-                pointerEvents: 'none'
-              }}
-            >
-              <div className="tooltip-content">
-                <strong>{monthlyData.categories[hoveredSlice].name}</strong>
-                <div className="tooltip-amount">
-                  €{monthlyData.categories[hoveredSlice].amount.toFixed(2)}
-                </div>
-                <div className="tooltip-percentage">
-                  {((monthlyData.categories[hoveredSlice].amount / total) * 100).toFixed(1)}%
+        <div className="chart-export-content" ref={chartRef}>
+          <div style={{ position: 'relative' }}>
+            <svg width="300" height="300" viewBox="0 0 300 300">
+              {slices}
+            </svg>
+            {hoveredSlice !== null && (
+              <div 
+                className="chart-tooltip"
+                style={{
+                  position: 'absolute',
+                  left: `${tooltipPosition.x}px`,
+                  top: `${tooltipPosition.y}px`,
+                  transform: 'translate(-50%, -120%)',
+                  pointerEvents: 'none'
+                }}
+              >
+                <div className="tooltip-content">
+                  <strong>{monthlyData.categories[hoveredSlice].name}</strong>
+                  <div className="tooltip-amount">
+                    €{monthlyData.categories[hoveredSlice].amount.toFixed(2)}
+                  </div>
+                  <div className="tooltip-percentage">
+                    {((monthlyData.categories[hoveredSlice].amount / total) * 100).toFixed(1)}%
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
-        <div className="total-expenses">
-          <span className="total-label">Total cheltuieli:</span>
-          <span className="total-amount">€{total.toFixed(2)}</span>
+            )}
+          </div>
+          <div className="total-expenses">
+            <span className="total-label">Total cheltuieli:</span>
+            <span className="total-amount">€{total.toFixed(2)}</span>
+          </div>
         </div>
         <div className="chart-legend">
           {monthlyData.categories.map((category, index) => {
@@ -237,6 +303,28 @@ export default function StatisticsPage() {
               </div>
             )
           })}
+        </div>
+        <div className="export-buttons">
+          <button className="export-btn pdf-btn" onClick={exportToPDF}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="16" y1="13" x2="8" y2="13" />
+              <line x1="16" y1="17" x2="8" y2="17" />
+              <polyline points="10 9 9 9 8 9" />
+            </svg>
+            Export PDF
+          </button>
+          <button className="export-btn excel-btn" onClick={exportToExcel}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+              <polyline points="14 2 14 8 20 8" />
+              <line x1="9" y1="15" x2="15" y2="15" />
+              <line x1="9" y1="11" x2="15" y2="11" />
+              <line x1="9" y1="19" x2="13" y2="19" />
+            </svg>
+            Export Excel
+          </button>
         </div>
       </div>
     )
