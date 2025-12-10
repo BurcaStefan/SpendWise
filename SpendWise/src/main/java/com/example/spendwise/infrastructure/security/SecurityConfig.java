@@ -39,6 +39,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(HttpMethod.GET, "/api/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/budget-accounts").permitAll()
                         .requestMatchers(HttpMethod.PATCH, "/api/users/reset-password").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/email/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/refresh-tokens").permitAll()

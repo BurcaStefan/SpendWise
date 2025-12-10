@@ -65,7 +65,6 @@ export default function RegistrationPage() {
 			setIsCodeSent(true)
 			setError('')
 		} catch (err) {
-			console.error('Error sending verification code:', err)
 			setError('Failed to send verification code. Please try again.')
 		} finally {
 			setIsSendingCode(false)
@@ -94,7 +93,6 @@ export default function RegistrationPage() {
 				setError('Invalid verification code. Please try again.')
 			}
 		} catch (err) {
-			console.error('Error verifying code:', err)
 			setError('Error verifying code. Please try again.')
 		}
 	}
@@ -123,7 +121,7 @@ export default function RegistrationPage() {
 		try {
 			const registerDto = RegisterUserDto.fromFormData(formData)
 
-			const response = await fetch(
+			const registerResponse = await fetch(
 				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users`,
 				{
 					method: 'POST',
@@ -134,16 +132,40 @@ export default function RegistrationPage() {
 				}
 			)
 
-			if (!response.ok) {
-				const errorData = await response.json()
+			if (!registerResponse.ok) {
+				const errorData = await registerResponse.json()
 				throw new Error(errorData.message || 'Registration failed')
+			}
+
+			const userData = await registerResponse.json()
+
+			const userId = userData.id || userData.userId
+			
+			const budgetAccountRequestBody = {
+				userId: userId
+			}
+
+			const budgetAccountResponse = await fetch(
+				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/budget-accounts`,
+				{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify(budgetAccountRequestBody)
+				}
+			)
+
+			if (!budgetAccountResponse.ok) {
+				const errorData = await budgetAccountResponse.json()
+			} else {
+				const budgetAccountData = await budgetAccountResponse.json()
 			}
 
 			localStorage.removeItem('verificationCodeHash')
 
 			navigate('/login')
 		} catch (err) {
-			console.error('Registration error:', err)
 			setError(err.message || 'Registration failed. Please try again.')
 		} finally {
 			setLoading(false)
