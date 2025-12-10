@@ -15,4 +15,5 @@ public interface IUserRepository {
     boolean deleteUser(UUID id);
     User getUserById(UUID id);
     String loginUser(String email, String password);
+    Optional<User> findByEmail(String email);
 }

@@ -5,7 +5,6 @@ import walletImg from '../../assets/wallet.png'
 import resetIcon from '../../assets/signup-icon.png'
 import useTheme from '../../hooks/useTheme'
 import { ResetPasswordDto } from '../../dto/userDto'
-import { hashText, verifyHash } from '../../utils/hashUtils'
 
 export default function ResetPasswordPage() {
 	const [showPassword, setShowPassword] = useState(false)
@@ -22,6 +21,7 @@ export default function ResetPasswordPage() {
 	const [isCodeSent, setIsCodeSent] = useState(false)
 	const [isCodeVerified, setIsCodeVerified] = useState(false)
 	const [isSendingCode, setIsSendingCode] = useState(false)
+	const [receivedCode, setReceivedCode] = useState('')
 	const [error, setError] = useState('')
 	const [loading, setLoading] = useState(false)
 
@@ -56,8 +56,7 @@ export default function ResetPasswordPage() {
 
 			const codeValue = data.code !== undefined ? data.code : data
 			const codeString = String(codeValue)
-			const hashedCode = await hashText(codeString)
-			localStorage.setItem('resetPasswordCodeHash', hashedCode)
+			setReceivedCode(codeString)
 
 			setIsCodeSent(true)
 			setError('')
@@ -69,30 +68,22 @@ export default function ResetPasswordPage() {
 		}
 	}
 
-	const handleVerifyCode = async () => {
+	const handleVerifyCode = () => {
 		if (!formData.verificationCode) {
 			setError('Please enter the verification code')
 			return
 		}
 
-		const storedHash = localStorage.getItem('resetPasswordCodeHash')
-		if (!storedHash) {
+		if (!receivedCode) {
 			setError('No verification code found. Please request a new code.')
 			return
 		}
 
-		try {
-			const isValid = await verifyHash(formData.verificationCode, storedHash)
-
-			if (isValid) {
-				setIsCodeVerified(true)
-				setError('')
-			} else {
-				setError('Invalid verification code. Please try again.')
-			}
-		} catch (err) {
-			console.error('Error verifying code:', err)
-			setError('Error verifying code. Please try again.')
+		if (formData.verificationCode.trim() === receivedCode.trim()) {
+			setIsCodeVerified(true)
+			setError('')
+		} else {
+			setError('Invalid verification code. Please try again.')
 		}
 	}
 
@@ -102,6 +93,11 @@ export default function ResetPasswordPage() {
 
 		if (!formData.email || !formData.newPassword || !formData.confirmPassword) {
 			setError('All fields are required')
+			return
+		}
+
+		if (formData.newPassword.length < 8) {
+			setError('Password must be at least 8 characters long')
 			return
 		}
 
@@ -123,7 +119,7 @@ export default function ResetPasswordPage() {
 			const response = await fetch(
 				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/reset-password`,
 				{
-					method: 'POST',
+					method: 'PATCH',
 					headers: {
 						'Content-Type': 'application/json'
 					},
@@ -135,8 +131,6 @@ export default function ResetPasswordPage() {
 				const errorData = await response.json()
 				throw new Error(errorData.message || 'Password reset failed')
 			}
-
-			localStorage.removeItem('resetPasswordCodeHash')
 
 			alert('Password reset successfully! You can now log in with your new password.')
 			navigate('/login')

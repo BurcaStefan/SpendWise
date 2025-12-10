@@ -75,4 +75,12 @@ public class UserServices {
         }
         return token;
     }
+
+    public User resetPassword(String email, String newPassword) {
+        User user = userRepository.findByEmail(email).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        String encodedPassword = passwordEncoder.encode(newPassword);
+        return userRepository.updatePassword(user.getId(), encodedPassword);
+    }
 }

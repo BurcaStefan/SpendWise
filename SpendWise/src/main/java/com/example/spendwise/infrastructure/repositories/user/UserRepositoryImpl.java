@@ -91,4 +91,10 @@ public class UserRepositoryImpl implements IUserRepository {
         }
         return null;
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
 }
