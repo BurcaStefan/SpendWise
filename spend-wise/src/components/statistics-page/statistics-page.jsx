@@ -7,6 +7,7 @@ import { getUserIdFromToken } from '../../services/authService'
 import jsPDF from 'jspdf'
 import html2canvas from 'html2canvas'
 import * as XLSX from 'xlsx'
+import { MonthlyExpensesDto, YearlyIncomeDto } from '../../dto/statisticsDto'
 
 export default function StatisticsPage() {
   const { theme } = useTheme()
@@ -110,7 +111,8 @@ export default function StatisticsPage() {
       }
 
       const data = await response.json()
-      setMonthlyData(data)
+      const monthlyExpensesDto = MonthlyExpensesDto.fromApiResponse(data, selectedMonth, selectedYear)
+      setMonthlyData(monthlyExpensesDto)
     } catch (err) {
       console.error('Error fetching statistics:', err)
       setError(err.message)
@@ -149,7 +151,8 @@ export default function StatisticsPage() {
       }
 
       const data = await response.json()
-      setYearlyData(data)
+      const yearlyIncomeDto = YearlyIncomeDto.fromApiResponse(data, yearlySelectedYear)
+      setYearlyData(yearlyIncomeDto)
     } catch (err) {
       console.error('Error fetching yearly statistics:', err)
       setYearlyError(err.message)
@@ -184,23 +187,10 @@ export default function StatisticsPage() {
   }
 
   const exportToExcel = () => {
-    if (!monthlyData || !monthlyData.categories) return
+    if (!monthlyData || !monthlyData.hasData()) return
 
     try {
-      const total = monthlyData.total
-      const data = monthlyData.categories.map(category => ({
-        'Categorie': category.name,
-        'Suma (€)': category.amount.toFixed(2),
-        'Procent (%)': ((category.amount / total) * 100).toFixed(2),
-        'Culoare': category.color
-      }))
-
-      data.push({
-        'Categorie': 'TOTAL',
-        'Suma (€)': total.toFixed(2),
-        'Procent (%)': '100.00',
-        'Culoare': ''
-      })
+      const data = monthlyData.toExcelData()
 
       const worksheet = XLSX.utils.json_to_sheet(data)
       
@@ -248,26 +238,10 @@ export default function StatisticsPage() {
   }
 
   const exportYearlyToExcel = () => {
-    if (!yearlyData || !yearlyData.incomeByMonth) return
+    if (!yearlyData || !yearlyData.hasData()) return
 
     try {
-      const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 
-                          'July', 'August', 'September', 'October', 'November', 'December']
-      
-      const data = Object.entries(yearlyData.incomeByMonth)
-        .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
-        .map(([month, amount]) => ({
-          'Luna': monthNames[parseInt(month) - 1],
-          'Venituri (€)': parseFloat(amount).toFixed(2)
-        }))
-
-      const total = Object.values(yearlyData.incomeByMonth)
-        .reduce((sum, amount) => sum + parseFloat(amount), 0)
-
-      data.push({
-        'Luna': 'TOTAL',
-        'Venituri (€)': total.toFixed(2)
-      })
+      const data = yearlyData.toExcelData()
 
       const worksheet = XLSX.utils.json_to_sheet(data)
       
@@ -288,7 +262,7 @@ export default function StatisticsPage() {
   }
 
   const renderLineChart = () => {
-    if (!yearlyData || !yearlyData.incomeByMonth) {
+    if (!yearlyData || !yearlyData.hasData()) {
       return (
         <div className="no-data">
           <p>No data available for this year</p>
@@ -296,14 +270,8 @@ export default function StatisticsPage() {
       )
     }
 
-    const monthlyIncome = Object.entries(yearlyData.incomeByMonth)
-      .sort((a, b) => parseInt(a[0]) - parseInt(b[0]))
-      .map(([month, amount]) => ({
-        month: parseInt(month),
-        amount: parseFloat(amount)
-      }))
-
-    const maxIncome = Math.max(...monthlyIncome.map(d => d.amount), 0)
+    const monthlyIncome = yearlyData.getMonthlyIncomes()
+    const maxIncome = yearlyData.getMaxIncome()
     const chartWidth = 600
     const chartHeight = 300
     const padding = { top: 40, right: 40, bottom: 50, left: 60 }
@@ -316,13 +284,12 @@ export default function StatisticsPage() {
     const points = monthlyIncome.map(d => `${xScale(d.month)},${yScale(d.amount)}`).join(' ')
     
     const pathData = monthlyIncome.map((d, i) => {
-      const x = xScale(d.month)
-      const y = yScale(d.amount)
+      const x = xScale(d.getMonth())
+      const y = yScale(d.getAmount())
       return i === 0 ? `M ${x} ${y}` : `L ${x} ${y}`
     }).join(' ')
 
-    const totalYearlyIncome = monthlyIncome.reduce((sum, d) => sum + d.amount, 0)
-    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+    const totalYearlyIncome = yearlyData.getTotalYearlyIncome()
 
     return (
       <div className="line-chart-container">
@@ -356,7 +323,7 @@ export default function StatisticsPage() {
           })}
 
           {monthlyIncome.map((d, i) => {
-            const x = xScale(d.month)
+            const x = xScale(d.getMonth())
             return (
               <text
                 key={i}
@@ -366,7 +333,7 @@ export default function StatisticsPage() {
                 fill="var(--text-secondary)"
                 fontSize="12"
               >
-                {monthNames[d.month - 1]}
+                {d.getShortMonthName()}
               </text>
             )
           })}
@@ -383,23 +350,23 @@ export default function StatisticsPage() {
           {monthlyIncome.map((d, i) => (
             <g key={i}>
               <circle
-                cx={xScale(d.month)}
-                cy={yScale(d.amount)}
+                cx={xScale(d.getMonth())}
+                cy={yScale(d.getAmount())}
                 r="6"
                 fill="#4CAF50"
                 stroke="#fff"
                 strokeWidth="2"
               />
-              {d.amount > 0 && (
+              {d.getAmount() > 0 && (
                 <text
-                  x={xScale(d.month)}
-                  y={yScale(d.amount) - 15}
+                  x={xScale(d.getMonth())}
+                  y={yScale(d.getAmount()) - 15}
                   textAnchor="middle"
                   fill="var(--text)"
                   fontSize="12"
                   fontWeight="bold"
                 >
-                  €{d.amount.toFixed(0)}
+                  €{d.getAmount().toFixed(0)}
                 </text>
               )}
             </g>
@@ -425,7 +392,7 @@ export default function StatisticsPage() {
 
         <div className="total-income">
           <span className="total-label">Total yearly income:</span>
-          <span className="total-amount">€{totalYearlyIncome.toFixed(2)}</span>
+          <span className="total-amount">€{yearlyData.getFormattedTotalYearlyIncome()}</span>
         </div>
         </div>
         
@@ -456,7 +423,7 @@ export default function StatisticsPage() {
   }
 
   const renderPieChart = () => {
-    if (!monthlyData || !monthlyData.categories || monthlyData.categories.length === 0) {
+    if (!monthlyData || !monthlyData.hasData()) {
       return (
         <div className="no-data">
           <p>No data available for this period</p>
@@ -464,7 +431,8 @@ export default function StatisticsPage() {
       )
     }
 
-    const total = monthlyData.total
+    const total = monthlyData.getTotal()
+    const categories = monthlyData.getCategories()
     const radius = 120
     const centerX = 150
     const centerY = 150
@@ -484,8 +452,8 @@ export default function StatisticsPage() {
       setHoveredSlice(null)
     }
 
-    const slices = monthlyData.categories.map((category, index) => {
-      const percentage = (category.amount / total) * 100
+    const slices = categories.map((category, index) => {
+      const percentage = category.getPercentage(total)
       const sliceAngle = (percentage / 100) * 360
       const startAngle = currentAngle
       const endAngle = currentAngle + sliceAngle
@@ -551,12 +519,12 @@ export default function StatisticsPage() {
                 }}
               >
                 <div className="tooltip-content">
-                  <strong>{monthlyData.categories[hoveredSlice].name}</strong>
+                  <strong>{monthlyData.getCategoryByIndex(hoveredSlice).name}</strong>
                   <div className="tooltip-amount">
-                    €{monthlyData.categories[hoveredSlice].amount.toFixed(2)}
+                    €{monthlyData.getCategoryByIndex(hoveredSlice).getFormattedAmount()}
                   </div>
                   <div className="tooltip-percentage">
-                    {((monthlyData.categories[hoveredSlice].amount / total) * 100).toFixed(1)}%
+                    {monthlyData.getCategoryByIndex(hoveredSlice).getFormattedPercentage(total)}%
                   </div>
                 </div>
               </div>
@@ -564,12 +532,12 @@ export default function StatisticsPage() {
           </div>
           <div className="total-expenses">
             <span className="total-label">Total cheltuieli:</span>
-            <span className="total-amount">€{total.toFixed(2)}</span>
+            <span className="total-amount">€{monthlyData.getFormattedTotal()}</span>
           </div>
         </div>
         <div className="chart-legend">
-          {monthlyData.categories.map((category, index) => {
-            const percentage = ((category.amount / total) * 100).toFixed(0)
+          {categories.map((category, index) => {
+            const percentage = category.getPercentage(total).toFixed(0)
             return (
               <div 
                 key={index} 
