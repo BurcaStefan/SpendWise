@@ -2,6 +2,7 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Login from './components/login-page/login-page'
 import Registration from './components/registration-page/registration-page'
+import ResetPassword from './components/reset-password-page/reset-password-page'
 import Home from './components/home-page/home-page'
 import Contact from './components/contact-page/contact-page'
 import ProfilePage from './components/profile-page/profile-page'
@@ -14,6 +15,7 @@ export default function AppRoutes() {
 				<Route path="/" element={<Navigate to="/login" replace />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Registration />} />
+				<Route path="/reset-password" element={<ResetPassword />} />
 				<Route path="/home" element={<Home />} />
 				<Route path="/contact" element={<Contact />} />
 				<Route path="/profile" element={<ProfilePage />} />

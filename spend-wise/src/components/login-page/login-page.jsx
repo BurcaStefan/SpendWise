@@ -100,7 +100,7 @@ export default function LoginPage() {
 
                             <div className="forgot-password">
                                 <span>Forgot your password?</span>
-                                <a href="#">Reset password</a>
+                                <a href="#" onClick={(e) => { e.preventDefault(); navigate('/reset-password') }}>Reset password</a>
                             </div>
 
                             <div className="buttons">

@@ -1,9 +1,6 @@
 package com.example.spendwise.controllers;
 
-import com.example.spendwise.application.dtos.user.CreateUserDto;
-import com.example.spendwise.application.dtos.user.LoginUserDto;
-import com.example.spendwise.application.dtos.user.UpdateUserNamesDto;
-import com.example.spendwise.application.dtos.user.UpdateUserPasswordDto;
+import com.example.spendwise.application.dtos.user.*;
 import com.example.spendwise.application.services.UserServices;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -66,5 +63,11 @@ public class UserController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(false);
         }
+    }
+
+    @PatchMapping("/reset-password")
+    public ResponseEntity<User> resetPassword(@Valid @RequestBody ResetPasswordDto dto) {
+        User updatedUser = userServices.resetPassword(dto.getEmail(), dto.getNewPassword());
+        return ResponseEntity.ok(updatedUser);
     }
 }
