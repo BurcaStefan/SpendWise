@@ -75,3 +75,17 @@ export class ContactFormDto {
     )
   }
 }
+
+export class ResetPasswordDto {
+  constructor(email, newPassword) {
+    this.email = email
+    this.newPassword = newPassword
+  }
+
+  static fromFormData(data) {
+    return new ResetPasswordDto(
+      data.email || '',
+      data.newPassword || ''
+    )
+  }
+}
