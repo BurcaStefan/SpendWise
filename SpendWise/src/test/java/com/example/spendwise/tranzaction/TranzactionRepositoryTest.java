@@ -60,15 +60,17 @@ class TranzactionRepositoryTest {
     }
 
     @Test
-    void updateTranzaction_NotFound_ReturnsNull() {
+    void updateTranzaction_NotFound_ThrowsException() {
         UpdateTranzactionDto dto = new UpdateTranzactionDto();
         when(springRepo.findById(id)).thenReturn(Optional.empty());
 
-        Tranzaction result = repository.updateTranzaction(id, dto);
+        assertThrows(RuntimeException.class, () -> {
+            repository.updateTranzaction(id, dto);
+        });
 
-        assertNull(result);
         verify(springRepo, never()).save(any());
     }
+
 
     @Test
     void getTranzactionById_Success() {

@@ -27,19 +27,26 @@ public class TranzactionRepository implements ITranzactionRepository {
 
     @Override
     public Tranzaction updateTranzaction(UUID tranzactionId, UpdateTranzactionDto tranzactionDto) {
-        Optional<Tranzaction> maybeTranzaction = tranzactionRepository.findById(tranzactionId);
-        if (maybeTranzaction.isEmpty()) {
-            return null;
-        }
-        Tranzaction tranzaction = maybeTranzaction.get();
-        tranzaction.setType(tranzactionDto.getTranzactionType());
-        tranzaction.setCategory(tranzactionDto.getCategoryType());
-        tranzaction.setValue(tranzactionDto.getValue());
-        tranzaction.setDate(tranzactionDto.getDate());
-        tranzaction.setRecurrent(tranzactionDto.isRecurrent());
-        tranzaction.setDescription(tranzactionDto.getDescription());
+        Tranzaction existingTranzaction = tranzactionRepository.findById(tranzactionId)
+                .orElseThrow(() -> {
+                    return new RuntimeException("Transaction not found");
+                });
 
-        return tranzactionRepository.save(tranzaction);
+
+        existingTranzaction.setType(tranzactionDto.getTranzactionType());
+        existingTranzaction.setCategory(tranzactionDto.getCategoryType());
+        existingTranzaction.setValue(tranzactionDto.getValue());
+        existingTranzaction.setDate(tranzactionDto.getDate());
+        existingTranzaction.setRecurrent(tranzactionDto.isRecurrent());
+        existingTranzaction.setDescription(tranzactionDto.getDescription());
+        try {
+            Tranzaction saved = tranzactionRepository.save(existingTranzaction);
+
+            return saved;
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
     }
 
     @Override
