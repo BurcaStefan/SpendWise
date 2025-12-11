@@ -58,7 +58,7 @@ export default function StatisticsPage() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/budget-accounts/user/${userId}`,
+        `${import.meta.env.REACT_APP_API_URL}/api/budget-accounts/user/${userId}`,
         {
           method: 'GET',
           headers: {
@@ -93,7 +93,7 @@ export default function StatisticsPage() {
     }
 
     try {
-      const url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/statistics/expenses/${accountId}?month=${selectedMonth}&year=${selectedYear}`
+      const url = `${import.meta.env.REACT_APP_API_URL}/api/statistics/expenses/${accountId}?month=${selectedMonth}&year=${selectedYear}`
       
       const response = await fetch(url, {
         method: 'GET',
@@ -134,7 +134,7 @@ export default function StatisticsPage() {
     }
 
     try {
-      const url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/statistics/income/${accountId}/${yearlySelectedYear}`
+      const url = `${import.meta.env.REACT_APP_API_URL}/api/statistics/income/${accountId}/${yearlySelectedYear}`
       
       const response = await fetch(url, {
         method: 'GET',

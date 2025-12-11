@@ -45,7 +45,7 @@ export default function ProfilePage() {
     try {
       const token = localStorage.getItem('token')
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/${userId}`,
+        `${process.env.REACT_APP_API_URL}/api/users/${userId}`,
         {
           method: 'GET',
           headers: {
@@ -95,7 +95,7 @@ export default function ProfilePage() {
         const namesDto = UpdateNamesDto.fromFormData(editedData)
                 
         const namesResponse = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/${userId}/names`,
+          `${import.meta.env.REACT_APP_API_URL}/api/users/${userId}/names`,
           {
             method: 'PATCH',
             headers: {
@@ -119,7 +119,7 @@ export default function ProfilePage() {
         const passwordDto = UpdatePasswordDto.fromFormData(editedData)
                 
         const passwordResponse = await fetch(
-          `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/${userId}/password`,
+          `${import.meta.env.REACT_APP_API_URL}/api/users/${userId}/password`,
           {
             method: 'PATCH',
             headers: {
@@ -159,7 +159,7 @@ export default function ProfilePage() {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/${userId}`,
+        `${process.env.REACT_APP_API_URL}/api/users/${userId}`,
         {
           method: 'DELETE',
           headers: {

@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:9090';
+const API_BASE = import.meta.env.REACT_APP_API_URL;
 
 async function request(path, options = {}) {
   const headers = new Headers(options.headers || {});

@@ -42,7 +42,7 @@ export default function ResetPasswordPage() {
 
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/email/send-password-reset-code?email=${encodeURIComponent(formData.email)}`,
+				`${import.meta.env.REACT_APP_API_URL}/api/email/send-password-reset-code?email=${encodeURIComponent(formData.email)}`,
 				{
 					method: 'POST'
 				}
@@ -117,7 +117,7 @@ export default function ResetPasswordPage() {
 			const resetDto = ResetPasswordDto.fromFormData(formData)
 
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users/reset-password`,
+				`${import.meta.env.REACT_APP_API_URL}/api/users/reset-password`,
 				{
 					method: 'PATCH',
 					headers: {

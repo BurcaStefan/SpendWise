@@ -66,8 +66,8 @@ export default function HomePage() {
 		}
 
 		try {
-			const accountIdResponse = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/budget-accounts/user/${userId}`,
+			const accountResponse = await fetch(
+				`${import.meta.env.REACT_APP_API_URL}/api/budget-accounts/user/${userId}`,
 				{
 					method: 'GET',
 					headers: {
@@ -85,8 +85,8 @@ export default function HomePage() {
 			const fetchedAccountId = accountIdText.replace(/"/g, '')
 			setAccountId(fetchedAccountId)
 
-			const accountResponse = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/budget-accounts/${fetchedAccountId}`,
+			const balanceResponse = await fetch(
+				`${import.meta.env.REACT_APP_API_URL}/api/budget-accounts/${fetchedAccountId}`,
 				{
 					method: 'GET',
 					headers: {
@@ -114,7 +114,7 @@ export default function HomePage() {
 	
 	const fetchMonthlyStatistics = async (budgetAccountId, token) => {
 		try {
-			const expensesUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/statistics/expenses/${budgetAccountId}?month=${currentMonth}&year=${currentYear}`
+			const expensesUrl = `${import.meta.env.REACT_APP_API_URL}/api/statistics/expenses/${budgetAccountId}?month=${currentMonth}&year=${currentYear}`
 			const expensesResponse = await fetch(expensesUrl, {
 				method: 'GET',
 				headers: {
@@ -125,7 +125,7 @@ export default function HomePage() {
 			
 			const expensesData = expensesResponse.ok ? await expensesResponse.json() : null
 			
-			const incomeUrl = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/statistics/income/${budgetAccountId}/${currentYear}`
+			const incomeUrl = `${import.meta.env.REACT_APP_API_URL}/api/statistics/income/${budgetAccountId}/${currentYear}`
 			const incomeResponse = await fetch(incomeUrl, {
 				method: 'GET',
 				headers: {
@@ -147,7 +147,7 @@ export default function HomePage() {
 		setTransactionsLoading(true)
 		
 		try {
-			let url = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/tranzactions/account/${budgetAccountId}/filter?page=${page}&size=${transactionsPerPage}&sortBy=${sortBy}&sortDirection=${sortDirection}`
+			let url = `${import.meta.env.REACT_APP_API_URL}/api/tranzactions/account/${budgetAccountId}/filter?page=${page}&size=${transactionsPerPage}&sortBy=${sortBy}&sortDirection=${sortDirection}`
 			
 			if (filterType) {
 				url += `&type=${filterType}`
@@ -295,7 +295,7 @@ export default function HomePage() {
 		
 			
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/tranzactions/${selectedTransaction.id}`,
+				`${import.meta.env.REACT_APP_API_URL}/api/tranzactions/${selectedTransaction.id}`,
 				{
 					method: 'PUT',
 					headers: {
@@ -343,7 +343,7 @@ export default function HomePage() {
 			const requestBody = createDto
 			
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/tranzactions`,
+				`${import.meta.env.REACT_APP_API_URL}/api/tranzactions`,
 				{
 					method: 'POST',
 					headers: {
@@ -381,7 +381,7 @@ export default function HomePage() {
 		
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/tranzactions/${selectedTransaction.id}`,
+				`${import.meta.env.REACT_APP_API_URL}/api/tranzactions/${selectedTransaction.id}`,
 				{
 					method: 'DELETE',
 					headers: {

@@ -34,7 +34,7 @@ export default function ContactPage() {
     try {
       const contactDto = ContactFormDto.fromFormData(formData);
       
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/email/send-contact-form`, {
+      const response = await fetch(`${import.meta.env.REACT_APP_API_URL}/api/email/send-contact-form`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

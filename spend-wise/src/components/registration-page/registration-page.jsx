@@ -45,7 +45,7 @@ export default function RegistrationPage() {
 
 		try {
 			const response = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/email/send-email-verification-code?email=${encodeURIComponent(formData.email)}`,
+				`${import.meta.env.REACT_APP_API_URL}/api/email/send-email-verification-code?email=${encodeURIComponent(formData.email)}`,
 				{
 					method: 'POST'
 				}
@@ -122,7 +122,7 @@ export default function RegistrationPage() {
 			const registerDto = RegisterUserDto.fromFormData(formData)
 
 			const registerResponse = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/users`,
+				`${import.meta.env.REACT_APP_API_URL}/api/users`,
 				{
 					method: 'POST',
 					headers: {
@@ -146,7 +146,7 @@ export default function RegistrationPage() {
 			}
 
 			const budgetAccountResponse = await fetch(
-				`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:9090'}/api/budget-accounts`,
+				`${import.meta.env.REACT_APP_API_URL}/api/budget-accounts`,
 				{
 					method: 'POST',
 					headers: {
